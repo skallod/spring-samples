@@ -1,9 +1,13 @@
 package ru.galuzin.spring.ioc.domain;
 
+import org.springframework.beans.factory.annotation.Value;
+
 public class Person {
 
     private String name;
+
     private int age;
+
 
     public Person(String name, int age) {
         this.name = name;
@@ -16,5 +20,13 @@ public class Person {
 
     public int getAge() {
         return age;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
     }
 }

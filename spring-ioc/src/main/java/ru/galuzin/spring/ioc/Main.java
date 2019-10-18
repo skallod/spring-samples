@@ -16,9 +16,11 @@ public class Main {
         PersonService service = context.getBean(PersonService.class);
 
         Person person = service.getByName("petya");
-        System.out.println("name: " + person.getName() + " age: " + person.getAge());
+        System.out.println(person);
 
         person = service.getByName("petya");
-        System.out.println("name: " + person.getName() + " age: " + person.getAge());
+        System.out.println(person);
+
+        System.out.println("service = " + service);
     }
 }

@@ -7,10 +7,10 @@ import ru.galuzin.spring.ioc.dao.PersonDao;
 import ru.galuzin.spring.ioc.dao.PersonDaoRandom;
 
 //@Configuration
-public class DaoConfig {
-    @Bean
-    @Scope(value = "prototype", proxyMode = ScopedProxyMode.TARGET_CLASS)
-    public PersonDao personDao() {
-        return new PersonDaoRandom();
-    }
-}
+//public class DaoConfig {
+//    @Bean
+//    @Scope(value = "prototype", proxyMode = ScopedProxyMode.TARGET_CLASS)
+//    public PersonDao personDao() {
+//        return new PersonDaoRandom();
+//    }
+//}

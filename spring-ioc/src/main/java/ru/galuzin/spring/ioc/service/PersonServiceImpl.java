@@ -9,11 +9,18 @@ public class PersonServiceImpl implements PersonService {
 
     private final PersonDao dao;
 
-    public PersonServiceImpl(@Qualifier(value = "personRandom") PersonDao dao) {
+    public PersonServiceImpl(/*@Qualifier(value = "personRandom"*/ PersonDao dao) {
         this.dao = dao;
     }
 
     public Person getByName(String name) {
         return dao.findByName(name);
+    }
+
+    @Override
+    public String toString() {
+        return "PersonServiceImpl{" +
+                "dao=" + dao +
+                '}';
     }
 }
