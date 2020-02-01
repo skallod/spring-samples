@@ -9,10 +9,7 @@ import ru.galuzin.spring.ioc.dao.PersonDaoRandom;
 import ru.galuzin.spring.ioc.dao.PersonDaoSimple;
 import ru.galuzin.spring.ioc.domain.EventHandler;
 import ru.galuzin.spring.ioc.domain.EventServer;
-import ru.galuzin.spring.ioc.service.OtherService;
-import ru.galuzin.spring.ioc.service.PersonService;
-import ru.galuzin.spring.ioc.service.PersonServiceImpl;
-import ru.galuzin.spring.ioc.service.StartStopService;
+import ru.galuzin.spring.ioc.service.*;
 
 import java.util.Collections;
 
@@ -58,5 +55,10 @@ public class ServicesConfig {
     @Bean
     public EventServer eventServer( EventHandler<String> eventHandler ){
         return new EventServer(Collections.singletonList(eventHandler));
+    }
+
+    @Bean
+    public LogService logService(){
+        return new LogService();
     }
 }
