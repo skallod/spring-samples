@@ -37,8 +37,8 @@ public class ServicesConfig {
      * @return
      */
     @Bean
-    public PersonDao personDao() {
-        System.out.println("create random dao");
+    public PersonDao personDao(@Value("${test.property:test5}")String unknownStr) {
+        System.out.println("create random dao " + unknownStr);
         return new PersonDaoRandom("not injected","not injected");
     }
 
