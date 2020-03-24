@@ -61,4 +61,9 @@ public class ServicesConfig {
     public LogService logService(){
         return new LogService();
     }
+
+    @Bean
+    public TaskService taskService(){
+        return new TaskService();
+    }
 }

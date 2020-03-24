@@ -11,6 +11,7 @@ import ru.galuzin.spring.ioc.domain.EventServer;
 import ru.galuzin.spring.ioc.domain.Person;
 import ru.galuzin.spring.ioc.service.OtherService;
 import ru.galuzin.spring.ioc.service.PersonService;
+import ru.galuzin.spring.ioc.service.TaskService;
 
 import java.util.concurrent.ExecutionException;
 
@@ -53,6 +54,24 @@ public class Main {
                 System.out.println("fail "+Thread.currentThread().getName());
             }
         });
+
+        final TaskService taskService = context.getBean(TaskService.class);
+        Runnable r = getRunnable();
+        taskService.execute(r);
+        taskService.execute(r);
+
         context.close();
+    }
+
+    private static Runnable getRunnable() {
+        return ()->{
+            System.out.println(Thread.currentThread().getId()+" start r");
+            try {
+                Thread.sleep(10_000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println(Thread.currentThread().getId()+" finish r");
+        };
     }
 }
