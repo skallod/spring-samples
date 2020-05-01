@@ -1,9 +1,7 @@
 package ru.galuzin.spring.ioc.config;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
 import ru.galuzin.spring.ioc.dao.PersonDao;
 import ru.galuzin.spring.ioc.dao.PersonDaoRandom;
 import ru.galuzin.spring.ioc.dao.PersonDaoSimple;
@@ -14,8 +12,13 @@ import ru.galuzin.spring.ioc.service.*;
 import java.util.Collections;
 
 @Configuration
+//@EnableAspectJAutoProxy
 @Import({DaoConfig.class})
+@PropertySource(value="application.properties")
 public class ServicesConfig {
+
+    @Value("${db.timeout:1000}")
+    private Integer dbTimeout=2000;
 
     @Bean
     public PersonService personService(PersonDao dao) {
