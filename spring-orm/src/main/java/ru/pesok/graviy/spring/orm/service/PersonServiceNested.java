@@ -20,21 +20,33 @@ public class PersonServiceNested {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updatePersonRN(long l, int nestedId,
+                             //если совпадает с внешним, то deadlock
+                             String newNested){
+        _updatePerson(l, nestedId, newNested);
+    }
+
+    @Transactional
     public void updatePerson(long l, int nestedId,
                              //если совпадает с внешним, то deadlock
                              String newNested){
+        _updatePerson(l, nestedId, newNested);
+    }
+
+    private void _updatePerson(long l, int nestedId, String newNested) {
         long time = System.currentTimeMillis();
         Session session = localSessionFactoryBean.getObject().getCurrentSession();
         log.info("gal session nested = " + session.hashCode());
-        Person load = session.load(Person.class, nestedId, LockOptions.UPGRADE);
+        Person loadNested = session.load(Person.class, nestedId, LockOptions.UPGRADE);
         log.info("gal nested after load");
         try {
             Thread.sleep(l);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        load.setName(load.getName()+newNested);
-        session.saveOrUpdate(load);
-        log.info("gal save with lock timing " + (System.currentTimeMillis() - time));
+        loadNested.setName(loadNested.getName()+newNested);
+        session.saveOrUpdate(loadNested);
+        log.info("gal save with lock timing " + loadNested.getName() +
+                " ; " + (System.currentTimeMillis() - time));
     }
 }

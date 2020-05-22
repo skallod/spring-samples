@@ -37,26 +37,20 @@ public class PersonService {
     }
 
     @Transactional
-    public void saveWithLock(int id, long timout, String newName, int nestedId){
+    public void saveWithLockAndReadNested(int id, String newName, int nestedId){
         long time = System.currentTimeMillis();
         Session session = localSessionFactoryBean.getObject().getCurrentSession();
         log.info("gal session = " + session.hashCode());
         Person load = session.load(Person.class, id, LockOptions.UPGRADE);
-        try {
-            Thread.sleep(timout);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         load.setName(load.getName()+newName);
         session.saveOrUpdate(load);
         log.info( "gal save with lock timing " + (System.currentTimeMillis() - time));
         Person person = session.find(Person.class, nestedId);
         log.info("gal person from nested "+person);
-//        repository.save(p);
     }
 
     @Transactional
-    public void saveWithLockWithNested(int id, long timout, String newName, int nestedId){
+    public void saveWithLockWithNested(int id, long timout, String newName, int nestedId, boolean reqiresNew){
         long time = System.currentTimeMillis();
         Session session = localSessionFactoryBean.getObject().getCurrentSession();
         log.info("gal session = " + session.hashCode());
@@ -66,13 +60,15 @@ public class PersonService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        personServiceNested.updatePerson(timout/2, nestedId, newName);
-        Person person = session.find(Person.class, nestedId);
-        log.info("gal person from nested "+person);
+        load.setName(load.getName()+newName);
+        if (reqiresNew) {
+            personServiceNested.updatePersonRN(timout / 2, nestedId, newName);
+        } else {
+            personServiceNested.updatePerson(timout / 2, nestedId, newName);
+        }
         load.setName(load.getName()+newName);
         session.saveOrUpdate(load);
         log.info("gal save with lock timing " + (System.currentTimeMillis() - time));
-//        repository.save(p);
     }
 
     @Transactional
