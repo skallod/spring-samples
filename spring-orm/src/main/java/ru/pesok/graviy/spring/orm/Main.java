@@ -43,8 +43,8 @@ public class Main {
     public void entryPoint(PersonService service) throws Exception {
         List<Person> all = service.getAll();
         log.info("gal all = " + all);
-        service.save(new Person(1,"Pushkin","alks"));
-        service.save(new Person(2,"Esenin","siniy"));
+        service.save(new Person(1, "Pushkin", "alks"));
+        service.save(new Person(2, "Esenin", "siniy"));
         all = service.getAll();
         log.info("gal all = " + all);
         testRequiresNewNotCleanParentTxLock(service);
@@ -64,7 +64,7 @@ public class Main {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                service.saveWithLockAndReadNested(1, "_3",2);
+                service.saveWithLockAndReadNested(1, "_3", 2);
             });
             submit1.get();
             submit2.get();
@@ -75,13 +75,13 @@ public class Main {
         // first tx get lock
         // second tx (nested) requered new not release lock
         // third tx wait first tx then update name
-        if(!"Pushkin_2_2_3".equals(person.getName())
-          || !"Esenin_2".equals(service.get(2).getName())){
+        if (!"Pushkin_2_2_3".equals(person.getName())
+                || !"Esenin_2".equals(service.get(2).getName())) {
             throw new RuntimeException("test fail");
         }
     }
 
-    public void testReentrentLockAndSessionCache (PersonService service) throws Exception{
+    public void testReentrentLockAndSessionCache(PersonService service) throws Exception {
         ExecutorService executor = Executors.newFixedThreadPool(2);
         {
             Person person = service.get(1);
@@ -96,7 +96,7 @@ public class Main {
         //+_2 first transaction
         //+_2 nested transacion , session cache
         //+_2 first transaction
-        if(!"Pushkin_2_2_2".equals(person.getName())){
+        if (!"Pushkin_2_2_2".equals(person.getName())) {
             throw new RuntimeException("assert fail");
         }
     }

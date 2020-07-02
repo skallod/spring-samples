@@ -4,10 +4,9 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.util.concurrent.ListenableFuture;
 import ru.galuzin.spring.ioc.config.ServicesConfig;
-import ru.galuzin.spring.ioc.domain.EventHandler;
-import ru.galuzin.spring.ioc.domain.EventServer;
+import ru.galuzin.spring.ioc.service.EventServer;
 import ru.galuzin.spring.ioc.domain.Person;
 import ru.galuzin.spring.ioc.service.OtherService;
 import ru.galuzin.spring.ioc.service.PersonService;
@@ -45,14 +44,18 @@ public class Main {
         Futures.addCallback(future, new FutureCallback<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                System.out.println("success "+Thread.currentThread().getName());
+                System.out.println("success " + Thread.currentThread().getName());
             }
 
             @Override
             public void onFailure(Throwable throwable) {
-                System.out.println("fail "+Thread.currentThread().getName());
+                System.out.println("fail " + Thread.currentThread().getName());
             }
         });
+        final ListenableFuture<?> future1 = eventServer.registerEvent();
+        future1.addCallback( a -> System.out.println("success " + Thread.currentThread().getName())
+            , throwable -> System.out.println("fail " + Thread.currentThread().getName()));
+
         context.close();
     }
 }

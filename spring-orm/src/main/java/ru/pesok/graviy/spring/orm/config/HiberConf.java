@@ -70,12 +70,12 @@ public class HiberConf {
     }
 
     @Bean
-    public PersonService personService(){
+    public PersonService personService() {
         return new PersonService(personServiceNested(), sessionFactory());
     }
 
     @Bean
-    public PersonServiceNested personServiceNested(){
+    public PersonServiceNested personServiceNested() {
         return new PersonServiceNested(sessionFactory());
     }
 }

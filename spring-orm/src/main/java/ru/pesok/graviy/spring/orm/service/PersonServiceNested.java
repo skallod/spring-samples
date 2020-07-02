@@ -21,15 +21,15 @@ public class PersonServiceNested {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updatePersonRN(long l, int nestedId,
-                             //если совпадает с внешним, то deadlock
-                             String newNested){
+                               //если совпадает с внешним, то deadlock
+                               String newNested) {
         _updatePerson(l, nestedId, newNested);
     }
 
     @Transactional
     public void updatePerson(long l, int nestedId,
                              //если совпадает с внешним, то deadlock
-                             String newNested){
+                             String newNested) {
         _updatePerson(l, nestedId, newNested);
     }
 
@@ -44,7 +44,7 @@ public class PersonServiceNested {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        loadNested.setName(loadNested.getName()+newNested);
+        loadNested.setName(loadNested.getName() + newNested);
         session.saveOrUpdate(loadNested);
         log.info("gal save with lock timing " + loadNested.getName() +
                 " ; " + (System.currentTimeMillis() - time));

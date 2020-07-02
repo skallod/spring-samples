@@ -18,7 +18,7 @@ public class PersonService {
 
 //    private final PersonRepository repository;
 
-//    @Autowired
+    //    @Autowired
     private final PersonServiceNested personServiceNested;
 
 
@@ -30,59 +30,59 @@ public class PersonService {
     }
 
     @Transactional
-    public void save(Person p){
+    public void save(Person p) {
         Session session = localSessionFactoryBean.getObject().getCurrentSession();
         session.saveOrUpdate(p);
 //        repository.save(p);
     }
 
     @Transactional
-    public void saveWithLockAndReadNested(int id, String newName, int nestedId){
+    public void saveWithLockAndReadNested(int id, String newName, int nestedId) {
         long time = System.currentTimeMillis();
         Session session = localSessionFactoryBean.getObject().getCurrentSession();
         log.info("gal session = " + session.hashCode());
         Person load = session.load(Person.class, id, LockOptions.UPGRADE);
-        load.setName(load.getName()+newName);
+        load.setName(load.getName() + newName);
         session.saveOrUpdate(load);
-        log.info( "gal save with lock timing " + (System.currentTimeMillis() - time));
+        log.info("gal save with lock timing " + (System.currentTimeMillis() - time));
         Person person = session.find(Person.class, nestedId);
-        log.info("gal person from nested "+person);
+        log.info("gal person from nested " + person);
     }
 
     @Transactional
-    public void saveWithLockWithNested(int id, long timout, String newName, int nestedId, boolean reqiresNew){
+    public void saveWithLockWithNested(int id, long timout, String newName, int nestedId, boolean reqiresNew) {
         long time = System.currentTimeMillis();
         Session session = localSessionFactoryBean.getObject().getCurrentSession();
         log.info("gal session = " + session.hashCode());
         Person load = session.load(Person.class, id, LockOptions.UPGRADE);
         try {
-            Thread.sleep(timout/2);
+            Thread.sleep(timout / 2);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        load.setName(load.getName()+newName);
+        load.setName(load.getName() + newName);
         if (reqiresNew) {
             personServiceNested.updatePersonRN(timout / 2, nestedId, newName);
         } else {
             personServiceNested.updatePerson(timout / 2, nestedId, newName);
         }
-        load.setName(load.getName()+newName);
+        load.setName(load.getName() + newName);
         session.saveOrUpdate(load);
         log.info("gal save with lock timing " + (System.currentTimeMillis() - time));
     }
 
     @Transactional
-    public List<Person> getAll(){
+    public List<Person> getAll() {
         Session session = localSessionFactoryBean.getObject().getCurrentSession();
         Criteria criteria = session.createCriteria(Person.class);
 //        Person load = session.load(Person.class, 2);
         //session.detach(load);
-        return (List<Person>)criteria.list();
+        return (List<Person>) criteria.list();
         //return repository.getAll();
     }
 
     @Transactional
-    public Person get(int id){
+    public Person get(int id) {
         Session session = localSessionFactoryBean.getObject().getCurrentSession();
         Person load = session.find(Person.class, id);
         //session.detach(load);

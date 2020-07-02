@@ -14,7 +14,7 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Service
-public class PersonRepository  {
+public class PersonRepository {
 
     @PersistenceContext
     private EntityManager em;
@@ -36,11 +36,11 @@ public class PersonRepository  {
     }
 
     @Transactional
-    public void deleteFromZone(String zone){
+    public void deleteFromZone(String zone) {
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaDelete<Person> criteriaDelete = builder.createCriteriaDelete(Person.class);
         Root<Person> root = criteriaDelete.from(Person.class);
-        criteriaDelete.where(builder.equal(root.get("zone"),zone));
+        criteriaDelete.where(builder.equal(root.get("zone"), zone));
         em.createQuery(criteriaDelete).executeUpdate();
     }
 

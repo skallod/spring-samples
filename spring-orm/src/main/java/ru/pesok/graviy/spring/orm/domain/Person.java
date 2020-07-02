@@ -1,4 +1,5 @@
 package ru.pesok.graviy.spring.orm.domain;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 

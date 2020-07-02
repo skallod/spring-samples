@@ -20,8 +20,8 @@ public class PersonDaoRandom implements PersonDao {
     final private Boolean testEnabled;
 
     public PersonDaoRandom(
-            @Value("${test.property}")String testProperty
-            , @Value("${test.enabled}")String testEnabled){
+            @Value("${test.property}") String testProperty
+            , @Value("${test.enabled}") String testEnabled) {
         person = new Person("vasjya", new Random().nextInt(100));
         this.testProperty = testProperty;
         this.testEnabled = Boolean.parseBoolean(testEnabled);

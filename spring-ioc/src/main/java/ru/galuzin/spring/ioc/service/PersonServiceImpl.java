@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.galuzin.spring.ioc.dao.PersonDao;
 import ru.galuzin.spring.ioc.domain.Person;
+
 @Service
 public class PersonServiceImpl implements PersonService {
 
