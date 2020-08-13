@@ -15,10 +15,12 @@ public class PersonServiceImpl implements PersonService {
     private LogService logService;
 
     public PersonServiceImpl(/*@Qualifier(value = "personRandom"*/ PersonDao dao) {
+        System.out.println("person-service-impl contructor");
         this.dao = dao;
     }
 
     public Person getByName(String name) {
+        System.out.println("person-service-impl getByName");
         logService.log(name);
         return dao.findByName(name);
     }
