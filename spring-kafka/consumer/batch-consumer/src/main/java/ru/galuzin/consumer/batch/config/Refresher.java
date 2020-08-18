@@ -15,10 +15,12 @@ import java.util.stream.Collectors;
 public class Refresher implements ConsumerSeekAware {
 
     volatile String currentLastMessage;
-    volatile Integer partitionId;
+    volatile Integer partitionId;//todo thread local
 
     @KafkaListener(id = "listMsgAckConsumer", topics = "batch_topic", containerFactory = "refreshKafkaListenerContainerFactory")
-    public void listen16(List<Message<String>> list, Acknowledgment acknowledgment, Consumer<String, String> consumer) {
+    public void listen16(List<Message<String>> list
+            , Acknowledgment acknowledgment,
+                         Consumer<String, String> consumer) {
         acknowledgment.acknowledge();
         Set<TopicPartition> assignment = consumer.assignment();
         Map<Integer, Long> topicPartitionLongMap = consumer.endOffsets(assignment).entrySet().
@@ -28,6 +30,7 @@ public class Refresher implements ConsumerSeekAware {
                 currentLastMessage = mes.getPayload();
                 partitionId = mes.getHeaders().get("kafka_receivedPartitionId", Integer.class);
             }
+            //todo if(curMes == null) continue
             long mesOffset = mes.getHeaders().get("kafka_offset", Long.class);
             int mesPartitionId = mes.getHeaders().get("kafka_receivedPartitionId", Integer.class);
             if(partitionId!=null &&
