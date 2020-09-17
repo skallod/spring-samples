@@ -15,7 +15,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.pesok.graviy.spring.orm.repository.PersonRepository;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {PersonServiceTest.TestConfig.class, PersonService.class})
+@ContextConfiguration(classes = {PersonServiceTest.TestConfig.class, PersonService.class})
+//same result @SpringBootTest(classes = {PersonServiceTest.TestConfig.class, PersonService.class})
 //@ComponentScan("ru.pesok.graviy.spring.orm.service")
 public class PersonServiceTest {
 
