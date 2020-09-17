@@ -14,7 +14,7 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Service
-public class PersonRepository  {
+public class PersonRepository implements PersonRepositoryIF {
 
     @PersistenceContext
     private EntityManager em;

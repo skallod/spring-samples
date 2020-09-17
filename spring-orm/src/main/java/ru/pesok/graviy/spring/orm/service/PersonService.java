@@ -5,15 +5,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pesok.graviy.spring.orm.domain.Person;
 import ru.pesok.graviy.spring.orm.repository.PersonRepository;
+import ru.pesok.graviy.spring.orm.repository.PersonRepositoryIF;
 
 import java.util.List;
 
 @Service
 public class PersonService {
 
-    private final PersonRepository repository;
+    private final PersonRepositoryIF repository;
 
-    public PersonService(PersonRepository repository) {
+    public PersonService(PersonRepositoryIF repository) {
         this.repository = repository;
     }
 
