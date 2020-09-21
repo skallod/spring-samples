@@ -19,12 +19,12 @@ public class PersonService {
     }
 
     @Transactional
-    public void save(Person p){
+    public void save(Person p) {
         repository.save(p);
     }
 
     @Transactional(readOnly = true)
-    public List<Person> getAll(){
+    public List<Person> getAll() {
         return repository.getAll();
     }
 

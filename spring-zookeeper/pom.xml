@@ -21,5 +21,6 @@
     <modules>
         <module>zookeeper-reader</module>
         <module>zookeeper-writer</module>
+        <module>zookeeper-common</module>
     </modules>
 </project>

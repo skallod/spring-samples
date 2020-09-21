@@ -5,6 +5,8 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryNTimes;
 import org.apache.zookeeper.KeeperException;
+import ru.galuzin.article_2.DistributedLock;
+import ru.galuzin.zookeeper.common.ZookeeperHelper;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.CountDownLatch;
@@ -18,28 +20,35 @@ public class ZookeeperReaderMain {
         RetryPolicy retryPolicy = new RetryNTimes(maxRetries, sleepMsBetweenRetries);
         CuratorFramework client = CuratorFrameworkFactory.newClient("127.0.0.1:2182", retryPolicy);
         client.start();
-        String str = "/graviy/test/value1";
 
-        //sync , garantie
-        AtomicInteger rc = new AtomicInteger();
-        CountDownLatch latch = new CountDownLatch(1);
+//        String str = "/graviy/test/value1";
+//        ZookeeperHelper.writeValue(client,str);
+//        ZookeeperHelper.sync(client, str);
+//        ZookeeperHelper.readValue(client, str);
+
+//        String lockPath = "/mutexA";
+//        String lockName = "lockName";
+//        DistributedLock lock = new DistributedLock(client.getZookeeperClient().getZooKeeper(), lockPath, lockName);
+//        lock.lock();
+//        System.out.println("lock was got ");
+
+        System.out.println("phase 1");
+        String key = "/client/A/state";
+        ZookeeperHelper.initPath(client, key);
+        ZookeeperHelper.DataWithVersion dataWithVersion = ZookeeperHelper.readValue(client, key);
+        System.out.println("cur version " + dataWithVersion.version);
+        Thread.sleep(60_000);
+        System.out.println("phase 2");
         try {
-            client.getZookeeperClient().getZooKeeper().sync(str ,(code, path, ctx) ->{
-                rc.set(code);
-                latch.countDown();
-            } , null);
-        } catch (Exception e) {
-            throw new IllegalStateException();
+            ZookeeperHelper.writeValue(client, key, dataWithVersion.value + 1, dataWithVersion.version);
+        }catch (KeeperException.BadVersionException bve) {
+            System.out.println("bve.getMessage() = " + bve.getMessage());
         }
-        latch.await();
-        KeeperException.Code code = KeeperException.Code.get(rc.get());
-        if (code != KeeperException.Code.OK) {
-            throw new RuntimeException("Ошибка при синхронизации пути " + str + ". Код ошибки: " + code);
-        }
+        System.out.println("end");
 
-        byte[] bytes = client.getData().forPath(str);
-        String s = new String(bytes);
-        System.out.println("s = " + s);
+        Thread.sleep(60_000);
         client.close();
     }
+
+
 }
