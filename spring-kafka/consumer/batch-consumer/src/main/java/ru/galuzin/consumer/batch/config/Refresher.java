@@ -25,12 +25,14 @@ public class Refresher implements ConsumerSeekAware {
         Set<TopicPartition> assignment = consumer.assignment();
         Map<Integer, Long> topicPartitionLongMap = consumer.endOffsets(assignment).entrySet().
                 stream().collect(Collectors.toMap(e->e.getKey().partition(),Map.Entry::getValue));
-        list.forEach(mes -> {
+        for(Message<String> mes : list) {
             if(mes.getHeaders().get("kafka_receivedMessageKey", String.class).equals("test")) {
                 currentLastMessage = mes.getPayload();
                 partitionId = mes.getHeaders().get("kafka_receivedPartitionId", Integer.class);
             }
-            //todo if(curMes == null) continue
+            if(currentLastMessage == null || partitionId == null) {
+                continue;
+            }
             long mesOffset = mes.getHeaders().get("kafka_offset", Long.class);
             int mesPartitionId = mes.getHeaders().get("kafka_receivedPartitionId", Integer.class);
             if(partitionId!=null &&
@@ -40,7 +42,7 @@ public class Refresher implements ConsumerSeekAware {
                 apply(currentLastMessage==null?"NORMAL":currentLastMessage);
                 currentLastMessage = null; //not apply until new message
             }
-        });
+        }
     }
 
     private void apply(String s) {
