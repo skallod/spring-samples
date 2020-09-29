@@ -3,16 +3,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>ru.galuzin</groupId>
-    <artifactId>producer</artifactId>
+    <artifactId>common</artifactId>
     <version>1.0</version>
     <packaging>pom</packaging>
-    <name>producer</name>
+    <name>common</name>
     <parent>
         <groupId>ru.galuzin</groupId>
         <artifactId>spring-kafka</artifactId>
         <version>1.0</version>
     </parent>
     <modules>
-        <module>producer-1</module>
+        <module>dto</module>
     </modules>
 </project>
