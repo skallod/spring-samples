@@ -33,4 +33,19 @@ public class ProducerConf {
     public KafkaTemplate<String, Book> template(){
         return new KafkaTemplate<>(createProducerFactory());
     }
+
+    @Bean
+    public ProducerFactory<String, String> createProducerFactoryString() {
+        final Map<String, Object> properties = new HashMap<>();
+        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+
+        return new DefaultKafkaProducerFactory<>(properties);//, new StringSerializer(), new StringSerializer()
+    }
+
+    @Bean
+    public KafkaTemplate<String, String> templateString(){
+        return new KafkaTemplate<>(createProducerFactoryString());
+    }
 }

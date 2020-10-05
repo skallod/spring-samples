@@ -8,12 +8,10 @@ import org.apache.kafka.clients.consumer.RoundRobinAssignor;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.header.Header;
-import org.apache.kafka.common.header.internals.RecordHeader;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.NestedExceptionUtils;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.listener.*;
@@ -21,6 +19,7 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.kafka.support.serializer.*;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.backoff.BackOff;
 import org.springframework.util.backoff.FixedBackOff;
 
@@ -95,7 +94,34 @@ public class RetryConsumerConf {
             } else {
                 return new TopicPartition(COMPACTED_TOPIC, cr.partition());
             }
-        }), backOff);
+        }), backOff) {
+            @Override
+            @SuppressWarnings(value = "unchecked")
+            public void handle(Exception e, List<ConsumerRecord<?, ?>> records,
+                               Consumer<?, ?> consumer, MessageListenerContainer container) {
+                //records list unknown which is exception
+                //посмотрел в кишках там получается первое сообщение и есть с ошибкой
+                System.out.println("gal th = " + Thread.currentThread().getId() + " handle override = " + e.getMessage());
+                if (e.getCause() != null && e.getCause() instanceof DeserializationException) {
+                    System.out.println("gal th = " + Thread.currentThread().getId() + " DLT");
+                } else {
+                    System.out.println("gal th = " + Thread.currentThread().getId() + " RETRY");
+                    if (!ObjectUtils.isEmpty(records)) {
+                        try {
+                            ConsumerRecord<String, Book> record = (ConsumerRecord<String, Book>) records.get(0);
+                            handleException(record, e, kafkaTemplate);
+                        } catch (Throwable e1) {
+                            System.out.println("fail send another topic");
+                            e1.printStackTrace();
+                        }
+                    } else {
+                        System.out.println("unhandled exception");
+                        e.printStackTrace();
+                    }
+                }
+                super.handle(e, records, consumer, container);
+            }
+        };
 
         /* not work {
             @Override
@@ -107,24 +133,10 @@ public class RetryConsumerConf {
             public void handle(Exception e, ConsumerRecord<?, ?> data, Consumer<?, ?> consumer) {
                 System.out.println("gal th = " + Thread.currentThread().getId() + " second m override = " + e.getMessage());
             }
-        };
-
-        /*{ records list unknown which is exception
-            @Override
-            public void handle(Exception e, List<ConsumerRecord<?, ?>> records,
-                               Consumer<?, ?> consumer, MessageListenerContainer container) {
-                System.out.println("gal th = " + Thread.currentThread().getId() + " handle override = " + e.getMessage());
-                if (e.getCause() != null && e.getCause() instanceof DeserializationException) {
-                    System.out.println("gal th = " + Thread.currentThread().getId() + " DLT");
-                } else {
-                    System.out.println("gal th = " + Thread.currentThread().getId() + " RETRY");
-                    handleExceptoin();
-                }
-                super.handle(e, records, consumer, container);
-            }
         };*/
+
         listenerContainer.setErrorHandler(errorHandler);
-        listenerContainer.start();
+        //listenerContainer.start();
         return listenerContainer;
     }
 
@@ -185,15 +197,20 @@ public class RetryConsumerConf {
         public void onMessage(ConsumerRecord<String, Book> data) {
             String key = data.key();
             Book value = data.value();
-            try {
+//            try {
                 System.out.println("gal th = " + Thread.currentThread().getId()
                         + " ; key = " + key + " ; val = " + value + " ; part = " + data.partition() + " ; off = " + data.offset());
-                System.out.println("gal th = " + Thread.currentThread().getId() + " author = " + value.getAuthor8().length());
-            }catch ( Exception e) {
-                System.out.println("gal th = " + Thread.currentThread().getId() + "e.getMessage() = " + e.getMessage());
-                handleExceptoin(data, key, value, e, kafkaTemplate);
-                throw e;
+            try {
+                Thread.sleep(70_000L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+//                System.out.println("gal th = " + Thread.currentThread().getId() + " author = " + value.getAuthor8().length());
+//            }catch ( Exception e) {
+//                System.out.println("gal th = " + Thread.currentThread().getId() + "e.getMessage() = " + e.getMessage());
+//                handleException(data, e, kafkaTemplate);
+//                throw e;
+//            }
 //            if ( value.getAuthor().equals("pushka") && data.partition() == 1
 //                && mainTopicCounter.incrementAndGet() < 10 ) {
 //                throw new IllegalStateException("unknown state");
@@ -202,12 +219,12 @@ public class RetryConsumerConf {
 
     }
 
-    private void handleExceptoin(ConsumerRecord<String, Book> data, String key, Book value, Exception e, KafkaOperations<String, Book> kafkaTemplate) {
+    private void handleException(ConsumerRecord<String, Book> data, Exception e, KafkaOperations<String, Book> kafkaTemplate) {
         try{
             Message<Book> message = MessageBuilder
-                    .withPayload(value)
+                    .withPayload(data.value())
                     .setHeader(KafkaHeaders.TOPIC, COMPACTED_TOPIC)
-                    .setHeader(KafkaHeaders.MESSAGE_KEY, key)
+                    .setHeader(KafkaHeaders.MESSAGE_KEY, data.key())
                     .setHeader(KafkaHeaders.DLT_EXCEPTION_FQCN, e.getClass().getName().getBytes())
                     .setHeader(KafkaHeaders.DLT_EXCEPTION_MESSAGE, Optional.ofNullable(e.getMessage()).map(String::getBytes).orElse(null))
                     .setHeader(KafkaHeaders.DLT_EXCEPTION_STACKTRACE, ExceptionUtils.getStackTrace(e))
@@ -237,10 +254,9 @@ public class RetryConsumerConf {
 //            changeHandler.handleChange(key, value);
             //handle
             String errMesHeader = Arrays.stream(data.headers().toArray()).filter(h -> h.key().equals(KafkaHeaders.DLT_EXCEPTION_MESSAGE))
-                    .findAny().map(h->h.value()).map(bytes -> new String(bytes)).orElse(null);
+                    .findAny().map(Header::value).map(String::new).orElse(null);
             String errStack = Arrays.stream(data.headers().toArray()).filter(h -> h.key().equals(KafkaHeaders.DLT_EXCEPTION_STACKTRACE))
-                    .findAny().map(h->h.value()).map(bytes -> new String(bytes)).orElse(null);
-            //todo попытаться вывести инфу об ошибке
+                    .findAny().map(Header::value).map(String::new).orElse(null);
             System.out.println("gal th = "+ Thread.currentThread().getId()
                     + " ; key = " + key + " ; val = " + value + " ; part = " + data.partition() + " ; off = " + data.offset() +
                     " ; err mess = " + errMesHeader + " ; err stack =" + errStack

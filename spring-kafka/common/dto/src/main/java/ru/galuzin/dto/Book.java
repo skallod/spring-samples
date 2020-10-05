@@ -10,6 +10,14 @@ public class Book {
     @JsonProperty()
     Human human;
 
+    public Book() {
+
+    }
+
+    public Book(String author8) {
+        this.author8 = author8;
+    }
+
     public String getAuthor8() {
         return author8;
     }
