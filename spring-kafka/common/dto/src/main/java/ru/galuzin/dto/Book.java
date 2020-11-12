@@ -7,7 +7,7 @@ public class Book {
     @JsonProperty(required = true)
     String author8;
 
-    @JsonProperty()
+    @JsonProperty
     Human human;
 
     public Book() {

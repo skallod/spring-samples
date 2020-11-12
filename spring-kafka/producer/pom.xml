@@ -14,5 +14,6 @@
     </parent>
     <modules>
         <module>producer-1</module>
+        <module>producer-2</module>
     </modules>
 </project>

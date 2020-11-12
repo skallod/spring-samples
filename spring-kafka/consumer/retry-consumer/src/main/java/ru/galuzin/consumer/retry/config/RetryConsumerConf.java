@@ -26,6 +26,7 @@ import org.springframework.util.backoff.FixedBackOff;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import ru.galuzin.dto.Book;
@@ -105,11 +106,11 @@ public class RetryConsumerConf {
                 if (e.getCause() != null && e.getCause() instanceof DeserializationException) {
                     System.out.println("gal th = " + Thread.currentThread().getId() + " DLT");
                 } else {
-                    System.out.println("gal th = " + Thread.currentThread().getId() + " RETRY");
                     if (!ObjectUtils.isEmpty(records)) {
                         try {
                             ConsumerRecord<String, Book> record = (ConsumerRecord<String, Book>) records.get(0);
-                            handleException(record, e, kafkaTemplate);
+                            System.out.println("gal th = " + Thread.currentThread().getId() + " RETRY");
+//                            handleException(record, e, kafkaTemplate);
                         } catch (Throwable e1) {
                             System.out.println("fail send another topic");
                             e1.printStackTrace();
@@ -128,7 +129,6 @@ public class RetryConsumerConf {
             public void handle(Exception e, ConsumerRecord<?, ?> data) {
                 System.out.println("gal th = " + Thread.currentThread().getId() + " first m override = " + e.getMessage());
             }
-
             @Override
             public void handle(Exception e, ConsumerRecord<?, ?> data, Consumer<?, ?> consumer) {
                 System.out.println("gal th = " + Thread.currentThread().getId() + " second m override = " + e.getMessage());
@@ -136,24 +136,24 @@ public class RetryConsumerConf {
         };*/
 
         listenerContainer.setErrorHandler(errorHandler);
-        //listenerContainer.start();
-        return listenerContainer;
-    }
-
-    @Bean
-    public ConcurrentMessageListenerContainer<String, Book> compactedContainer() {
-        final ContainerProperties containerProperties = new ContainerProperties(COMPACTED_TOPIC);
-        containerProperties.setMessageListener(new CompactedMessageListener());
-        containerProperties.setAckMode(ContainerProperties.AckMode.RECORD);
-        ConcurrentMessageListenerContainer<String, Book> listenerContainer =
-                new ConcurrentMessageListenerContainer<>(consumerFactory(), containerProperties);
-        listenerContainer.setConcurrency(10);
-        final BackOff backOff = new FixedBackOff(10_000, FixedBackOff.UNLIMITED_ATTEMPTS);
-        final SeekToCurrentErrorHandler errorHandler = new SeekToCurrentErrorHandler(backOff);
-        listenerContainer.setErrorHandler(errorHandler);
         listenerContainer.start();
         return listenerContainer;
     }
+
+//    @Bean
+//    public ConcurrentMessageListenerContainer<String, Book> compactedContainer() {
+//        final ContainerProperties containerProperties = new ContainerProperties(COMPACTED_TOPIC);
+//        containerProperties.setMessageListener(new CompactedMessageListener());
+//        containerProperties.setAckMode(ContainerProperties.AckMode.RECORD);
+//        ConcurrentMessageListenerContainer<String, Book> listenerContainer =
+//                new ConcurrentMessageListenerContainer<>(consumerFactory(), containerProperties);
+//        listenerContainer.setConcurrency(10);
+//        final BackOff backOff = new FixedBackOff(10_000, FixedBackOff.UNLIMITED_ATTEMPTS);
+//        final SeekToCurrentErrorHandler errorHandler = new SeekToCurrentErrorHandler(backOff);
+//        listenerContainer.setErrorHandler(errorHandler);
+//        listenerContainer.start();
+//        return listenerContainer;
+//    }
 
     @Bean
     public ConsumerFactory<String, Book> consumerFactory() {
@@ -188,6 +188,7 @@ public class RetryConsumerConf {
 
         KafkaOperations<String, Book> kafkaTemplate;
 
+        Map<String, AtomicInteger> errorCounter  = new ConcurrentHashMap<>();
 
         public MyMessageListener(KafkaOperations<String, Book> kafkaTemplate) {
             this.kafkaTemplate = kafkaTemplate;
@@ -197,24 +198,26 @@ public class RetryConsumerConf {
         public void onMessage(ConsumerRecord<String, Book> data) {
             String key = data.key();
             Book value = data.value();
+            String author = value.getAuthor8();
 //            try {
                 System.out.println("gal th = " + Thread.currentThread().getId()
-                        + " ; key = " + key + " ; val = " + value + " ; part = " + data.partition() + " ; off = " + data.offset());
-            try {
-                Thread.sleep(70_000L);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+                        + " auhtor = " + author + " ; key = " + key + " ; val = " + value + " ; part = " + data.partition() + " ; off = " + data.offset());
+//            try {
+//                Thread.sleep(70_000L);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
 //                System.out.println("gal th = " + Thread.currentThread().getId() + " author = " + value.getAuthor8().length());
 //            }catch ( Exception e) {
 //                System.out.println("gal th = " + Thread.currentThread().getId() + "e.getMessage() = " + e.getMessage());
 //                handleException(data, e, kafkaTemplate);
 //                throw e;
 //            }
-//            if ( value.getAuthor().equals("pushka") && data.partition() == 1
-//                && mainTopicCounter.incrementAndGet() < 10 ) {
-//                throw new IllegalStateException("unknown state");
-//            }
+            errorCounter.putIfAbsent(author, new AtomicInteger(0));
+            // check 1e 1e 1 2e 2e 2 , good
+            if ( errorCounter.get(author).incrementAndGet() < 3 ) {
+                throw new IllegalStateException("unknown state");
+            }
         }
 
     }

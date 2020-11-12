@@ -16,7 +16,7 @@ public class ProducerMain {
         {
             KafkaTemplate<String, Book> template = (KafkaTemplate<String, Book>) context.getBean("template");
             Book book = new Book();
-            book.setAuthor8(null);
+            book.setAuthor8("Vmnbmb");
             Author author = new Author();
             author.setName("petya");
             book.setHuman(author);
