@@ -4,11 +4,13 @@ package ru.pesok.graviy.spring.orm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import ru.pesok.graviy.spring.orm.domain.TaskType;
 import ru.pesok.graviy.spring.orm.service.PersonService;
 import ru.pesok.graviy.spring.orm.service.TaskService;
 
 import javax.annotation.PostConstruct;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @SuppressWarnings("SpringJavaAutowiredFieldsWarningInspection")
@@ -16,7 +18,12 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {
-        SpringApplication.run(Main.class);
+        ConfigurableApplicationContext context = SpringApplication.run(Main.class);
+        TaskService taskService1 = context.getBean(TaskService.class);
+//        while (true) {
+            taskService1.getAll();
+            Thread.sleep(1_000);
+//        }
     }
 
     @Autowired
@@ -29,8 +36,8 @@ public class Main {
     public void init() {
         System.out.println("init start");
 //        taskService.save(new TaskType(7,"DATA_TEST"));
-        List<TaskType> all = taskService.getAll();
-        System.out.println("all = " + all);
+//        List<TaskType> all = taskService.getAll();
+//        System.out.println("all = " + all);
 //        service.save(new Person(1,"Pushkin","room"));
 //        service.save(new Person(2,"Errt","kitchen"));
 //        service.save(new Person(3,"Ghh","room"));
