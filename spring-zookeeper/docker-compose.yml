@@ -7,7 +7,7 @@ services:
     networks:
       - zookeeper-net
     ports:
-      - 2182:2181
+      - 2181:2181
       - 2889:2888
       - 3889:3888
 

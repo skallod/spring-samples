@@ -16,6 +16,8 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 
 @Service
 public class TaskRepository {
@@ -23,7 +25,7 @@ public class TaskRepository {
     private static final String SAVE_SQL = "insert into changes (id, built_at, inserted_at, owner, data) " +
             "values (?, ?, ?, ?, ?)";
 
-    Logger log = LoggerFactory.getLogger(TaskRepository.class);
+    private static final Logger log = LoggerFactory.getLogger(TaskRepository.class);
 
     @PersistenceContext
     private EntityManager em;
@@ -36,7 +38,7 @@ public class TaskRepository {
         em.persist(p);
     }
 
-    @Transactional//(readOnly = true)
+    //@Transactional//(readOnly = true)
     public List<TaskType> getAll() {
         //jpql
 //        return em.createQuery("select r from TaskType r", TaskType.class).getResultList();
@@ -57,12 +59,42 @@ public class TaskRepository {
 //                ps.setString(4, "hakani");
 //                ps.setObject(5, pGobject);
 //            });
-            jdbcTemplate.query("select changes_partitioning_init(?)",
-                (ps) -> {
-                    ps.setString(1,"hakani");
-                        },
-                (rs) -> {}
-        );
+        final CountDownLatch latch = new CountDownLatch(1);
+        Runnable r = () -> {
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                log.error("galuzin await error",e);
+            }
+            log.info("galuzin start query");
+            try {
+                jdbcTemplate.execute("select changes_partioning_all_owners()");
+//                jdbcTemplate.query("select changes_partitioning_init(?)",
+//                        (ps) -> {
+//                            ps.setString(1, "hakani");
+//                        },
+//                        (rs) -> {
+//                        }
+//                );
+            } catch (Exception e) {
+                log.error("galuzin query error",e);
+            }
+        };
+//        CompletableFuture.runAsync(r);
+//        CompletableFuture.runAsync(r);
+//        CompletableFuture.runAsync(r);
+        latch.countDown();
         return null;
+    }
+
+    public void part(){
+        jdbcTemplate.query("select changes_partitioning_init(?)",
+            (ps) -> {
+                ps.setString(1, "selfcheck");
+                log.info("part init invoked");
+            },
+            (rs) -> {
+            }
+        );
     }
 }

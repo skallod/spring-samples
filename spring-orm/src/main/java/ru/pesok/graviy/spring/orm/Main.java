@@ -6,6 +6,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import ru.pesok.graviy.spring.orm.domain.TaskType;
+import ru.pesok.graviy.spring.orm.repository.ChangeRepository;
+import ru.pesok.graviy.spring.orm.service.ChangeService;
 import ru.pesok.graviy.spring.orm.service.PersonService;
 import ru.pesok.graviy.spring.orm.service.TaskService;
 
@@ -19,10 +21,12 @@ public class Main {
 
     public static void main(String[] args) throws InterruptedException {
         ConfigurableApplicationContext context = SpringApplication.run(Main.class);
-        TaskService taskService1 = context.getBean(TaskService.class);
+        ChangeService chR = context.getBean(ChangeService.class);
+        chR.saveChange();
+//        TaskService taskService1 = context.getBean(TaskService.class);
 //        while (true) {
-            taskService1.getAll();
-            Thread.sleep(1_000);
+//            taskService1.getAll();
+            Thread.sleep(10_000);
 //        }
     }
 

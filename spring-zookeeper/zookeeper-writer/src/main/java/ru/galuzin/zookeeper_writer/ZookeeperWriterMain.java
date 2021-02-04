@@ -12,7 +12,7 @@ public class ZookeeperWriterMain {
         int sleepMsBetweenRetries = 100;
         int maxRetries = 3;
         RetryPolicy retryPolicy = new RetryNTimes(maxRetries, sleepMsBetweenRetries);
-        CuratorFramework client = CuratorFrameworkFactory.newClient("127.0.0.1:2182", retryPolicy);
+        CuratorFramework client = CuratorFrameworkFactory.newClient("127.0.0.1:2181", retryPolicy);
         client.start();
 
 //        String str = "/graviy/test/value1";
@@ -26,7 +26,7 @@ public class ZookeeperWriterMain {
 //        lock.lock();
 //        System.out.println("lock was got ");
 
-        Thread.sleep(60_000);
+        Thread.sleep(10_000);
         client.close();
     }
 

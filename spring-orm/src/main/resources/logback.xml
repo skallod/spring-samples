@@ -4,7 +4,7 @@
     <appender name="task-service" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/task-service.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${BusLogDir}/test-bus.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>test-orm.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>10MB</maxFileSize>
             <maxHistory>1000</maxHistory>
             <totalSizeCap>2GB</totalSizeCap>
