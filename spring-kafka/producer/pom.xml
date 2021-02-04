@@ -15,5 +15,6 @@
     <modules>
         <module>producer-1</module>
         <module>producer-2</module>
+        <module>producer-3</module>
     </modules>
 </project>

@@ -7,3 +7,8 @@
 ./bin/kafka-console-producer.sh --broker-list localhost:9092 --topic gal-test-topic \
 --property "parse.key=true" \
 --property "key.separator=,"
+docker build -t custom-kafka .
+docker run --name=local_kafka -p 9092:9092 -e ZOOKEEPER_SERVERS=localhost:2181 --network="host" local-kafka
+docker run --name=local_zoo -p 2181:2181 -p 2888:2888 -p 3888:3888 --network="host" eventuateio/eventuate-zookeeper:0.4.0.RELEASE
+docker run --name=local_zoo -p 2181:2181 -p 2888:2888 -p 3888:3888 --network="host" zoo-local
+-v /var/lib/postgres:/bitnami/postgresql
