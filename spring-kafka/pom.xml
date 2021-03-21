@@ -22,5 +22,6 @@
         <module>consumer</module>
         <module>producer</module>
         <module>common</module>
+        <module>monitoring</module>
     </modules>
 </project>

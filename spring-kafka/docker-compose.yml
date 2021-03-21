@@ -3,9 +3,10 @@ services:
 
   zookeeper:
     container_name: zookeeper-service-sample
-    image: zoo-local
+#    image: eventuateio/eventuate-zookeeper:latest
+    image: zoo-local:latest
     networks:
-      - kafka-net
+      - spring-kafka-net
     ports:
       - 2181:2181
       - 2888:2888
@@ -13,18 +14,19 @@ services:
 
   kafka:
     container_name: kafka-service-sample
-    image: local-kafka
+#    image: eventuateio/eventuate-kafka:latest
+    image: local-kafka:latest
     ports:
       - 9092:9092
     networks:
-      - kafka-net
+      - spring-kafka-net
     depends_on:
       - zookeeper
     environment:
       - ADVERTISED_HOST_NAME=localhost
-      - KAFKA_HEAP_OPTS=-Xmx520m -Xms520m
+      - KAFKA_HEAP_OPTS=-Xmx1024m -Xms520m
       - ZOOKEEPER_SERVERS=zookeeper:2181
       - ZOOKEEPER_CONNECTION_TIMEOUT_MS=6000
 
 networks:
-  kafka-net:
+  spring-kafka-net:

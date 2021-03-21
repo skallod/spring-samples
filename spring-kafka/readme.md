@@ -12,3 +12,8 @@ docker run --name=local_kafka -p 9092:9092 -e ZOOKEEPER_SERVERS=localhost:2181 -
 docker run --name=local_zoo -p 2181:2181 -p 2888:2888 -p 3888:3888 --network="host" eventuateio/eventuate-zookeeper:0.4.0.RELEASE
 docker run --name=local_zoo -p 2181:2181 -p 2888:2888 -p 3888:3888 --network="host" zoo-local
 -v /var/lib/postgres:/bitnami/postgresql
+docker pull bitnami/kafka
+image: zoo-local
+image: local-kafka
+
+kafka-consumer-groups --bootstrap-server <kafkahost:port> --group <group_id> --topic <topic_name> --reset-offsets --to-earliest

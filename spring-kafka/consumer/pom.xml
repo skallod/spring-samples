@@ -17,5 +17,7 @@
         <module>retry-consumer</module>
         <module>consumer-1</module>
         <module>consumer-3</module>
+        <module>consumer-4</module>
+        <module>consumer-5</module>
     </modules>
 </project>
