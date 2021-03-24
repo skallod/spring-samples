@@ -4,9 +4,7 @@ import com.omarsmak.kafka.consumer.lag.monitoring.client.KafkaConsumerLagClient;
 import com.omarsmak.kafka.consumer.lag.monitoring.client.KafkaConsumerLagClientFactory;
 import com.omarsmak.kafka.consumer.lag.monitoring.client.data.Lag;
 import com.omarsmak.kafka.consumer.lag.monitoring.client.data.Offsets;
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.ListOffsetsResult;
-import org.apache.kafka.clients.admin.OffsetSpec;
+import org.apache.kafka.clients.admin.*;
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.TopicPartition;
 import org.slf4j.Logger;
@@ -25,7 +23,7 @@ public class LagService {
 
     final KafkaConsumerLagClient kafkaConsumerLagClient;
 
-    final String consumerGroup = "test_slow_consumer_galuzin";
+    final String consumerGroup = "test_slow_consumer";
 
     final String bootstrapConf = "localhost:9092";
 
@@ -57,25 +55,31 @@ public class LagService {
     }
     public void getLag2() {
         try {
-            final Lag requestTopicLag = findOne(consumerGroup, TOPIC).orElseThrow(() ->
-                    new RuntimeException("Topic {" + TOPIC
-                            + "} not found for consumer group {" + consumerGroup + "}"));
-            requestTopicLag.getLagPerPartition().entrySet().forEach(lagPP -> {
-                log.info("*** lag {} {}", lagPP.getKey(), lagPP.getValue());
-            });
-            requestTopicLag.getLatestConsumerOffsets().forEach((key, value) -> log.info("*** cons offset {} {}", key, value));
+            final Optional<Lag> requestTopicLagOpt = findOne(consumerGroup, TOPIC);
+            if (!requestTopicLagOpt.isPresent()) {
+                log.error("Topic {" + TOPIC + "} not found for consumer group {" + consumerGroup + "}");
+            } else {
+                //при неработающем консюмере корректно отображает офсет
+                requestTopicLagOpt.get().getLagPerPartition().entrySet().forEach(lagPP -> {
+                    log.info("*** lag {} {}", lagPP.getKey(), lagPP.getValue());
+                });
+                requestTopicLagOpt.get().getLatestConsumerOffsets().forEach((key, value) -> log.info("*** cons offset {} {}", key, value));
 //            requestTopicLag.getLatestTopicOffsets().entrySet().forEach(lagPP -> {
 //                log.info("*** topic offset {} {}", lagPP.getKey(), lagPP.getValue());
 //            });
 //            kafkaConsumerLagClient.getTopicOffsets(TOPIC).getOffsetPerPartition().entrySet().forEach(lagPP -> {
 //                log.info("*** topic offset2 {} {}", lagPP.getKey(), lagPP.getValue());
 //            });
-            final ListOffsetsResult topicStartOffsets = adminClient.listOffsets(
-                    requestTopicLag.getLatestTopicOffsets().keySet().stream().map(k -> new TopicPartition(TOPIC, k))
-                            .collect(Collectors.toMap(tp -> tp, tp -> OffsetSpec.earliest()))
-            );
-            final Map<TopicPartition, ListOffsetsResult.ListOffsetsResultInfo> topicPartitionListOffsetsResultInfoMap = topicStartOffsets.all().get();
-            topicPartitionListOffsetsResultInfoMap.forEach((key, value) -> log.info("topic start offset {} {} {}", key.topic(), key.partition(), value.offset()));
+                final ListOffsetsResult topicStartOffsets = adminClient.listOffsets(
+                        requestTopicLagOpt.get().getLatestTopicOffsets().keySet().stream().map(k -> new TopicPartition(TOPIC, k))
+                                .collect(Collectors.toMap(tp -> tp, tp -> OffsetSpec.earliest()))
+                );
+                final Map<TopicPartition, ListOffsetsResult.ListOffsetsResultInfo> topicPartitionListOffsetsResultInfoMap = topicStartOffsets.all().get();
+                topicPartitionListOffsetsResultInfoMap.forEach((key, value) -> log.info("topic start offset {} {} {}", key.topic(), key.partition(), value.offset()));
+            }
+            final DescribeTopicsResult describeTopicsResult = adminClient.describeTopics(Collections.singleton(TOPIC));
+            final Map<String, TopicDescription> stringTopicDescriptionMap = describeTopicsResult.all().get();
+            System.out.println("stringTopicDescriptionMap = " + stringTopicDescriptionMap);
         } catch (Exception e) {
             log.error("", e);
         }

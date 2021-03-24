@@ -15,8 +15,10 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.MessageListener;
 import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.TopicPartitionOffset;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
@@ -27,51 +29,16 @@ public class ConsumerConfig {
     private static final Logger log = LoggerFactory.getLogger(ConsumerConfig.class);
 
     //@Value("${my.producer.bootstrapServers}")
-    public static final String GROUP_ID = "test_slow_consumer_galuzin";
+    public static final String GROUP_ID = "test_slow_consumer";
     private static final String TOPIC_NAME = "test_galuzin";
     private static final String BOOTSTRAP_SERVERS = "localhost:9092";
 
     private volatile boolean switcher = true;
     private int i = 10;
 
-//    @Bean
-//    public ConcurrentMessageListenerContainer<String, String> consumerContainer() {
-//        final ContainerProperties containerProperties = new ContainerProperties(TOPIC_NAME);
-//        final CountDownLatch latch = new CountDownLatch(1);
-//        containerProperties.setMessageListener(new AcknowledgingMessageListener<String,String>() {
-//            @Override
-//            public void onMessage(ConsumerRecord<String, String> data, Acknowledgment acknowledgment) {
-//                log.info("data handle start {}", i);
-//                try {
-//                    Thread.sleep(i * 1000);
-//                    //rebalanceInitiator();
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                log.info("data.value() = " + data.value());
-//                latch.countDown();
-//                //acknowledgment.acknowledge();
-//            }
-//        });
-//        containerProperties.setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
-//        ConsumerFactory<String, String> consumerFactory = new DefaultKafkaConsumerFactory<>(consumerProperties("earliest"));
-//        ConcurrentMessageListenerContainer<String, String> listenerContainer = new ConcurrentMessageListenerContainer<>(consumerFactory, containerProperties);
-//        listenerContainer.setConcurrency(2);
-//
-//        listenerContainer.start();
-//        try {
-//            latch.await();
-//        } catch (InterruptedException interruptedException) {
-//            interruptedException.printStackTrace();
-//        }
-//        listenerContainer.stop();
-//        return listenerContainer;
-//    }
-
-//    @DependsOn("consumerContainer")
     @Bean
     public ConcurrentMessageListenerContainer<String, String> consumerContainer2() {
-        final ContainerProperties containerProperties = new ContainerProperties(TOPIC_NAME);
+        final ContainerProperties containerProperties = new ContainerProperties(getTPO());//TOPIC_NAME);
         containerProperties.setMessageListener(new MessageListener<String,String>() {
             @Override
             public void onMessage(ConsumerRecord<String, String> data) {
@@ -94,6 +61,15 @@ public class ConsumerConfig {
 
         listenerContainer.start();
         return listenerContainer;
+    }
+
+    private TopicPartitionOffset[] getTPO () {
+        //topic start offset test_galuzin 1 300
+        //topic start offset test_galuzin 0 0
+        return new TopicPartitionOffset[]{
+                new TopicPartitionOffset(TOPIC_NAME, 0, 0L),
+                new TopicPartitionOffset(TOPIC_NAME, 1, 250L)
+        };
     }
 
     private void rebalanceInitiator() {
