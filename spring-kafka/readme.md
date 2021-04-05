@@ -17,3 +17,8 @@ image: zoo-local
 image: local-kafka
 
 kafka-consumer-groups --bootstrap-server <kafkahost:port> --group <group_id> --topic <topic_name> --reset-offsets --to-earliest
+ * 
+ * Также офсет можно сбросить командой :
+ * bin/kafka-consumer-groups --bootstrap-server localhost:9092 --group [groupId] --topic [topicName] --reset-offsets --to-earliest --execute
+ * Посмотреть текущий офсет консюмера можно командой (работает лучше чем kafka-tool) :
+ * bin/kafka-consumer-groups --bootstrap-server localhost:9092 --group [groupId] --describe
