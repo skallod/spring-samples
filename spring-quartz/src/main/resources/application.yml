@@ -1,0 +1,13 @@
+spring:
+  quartz:
+    job-store-type: jdbc
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/smart_replication
+    jdbc-url: jdbc:postgresql://localhost:5432/smart_replication
+    username: smart_replication_ms
+    password: smart_replication_ms
