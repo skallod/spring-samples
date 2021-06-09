@@ -6,8 +6,8 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>test-orm.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>10MB</maxFileSize>
-            <maxHistory>1000</maxHistory>
-            <totalSizeCap>2GB</totalSizeCap>
+            <maxHistory>1</maxHistory>
+            <totalSizeCap>50MB</totalSizeCap>
         </rollingPolicy>
         <encoder>
             <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
