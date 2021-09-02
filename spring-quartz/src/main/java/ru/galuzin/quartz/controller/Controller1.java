@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Controller1 {
 
-    @GetMapping("/create/hour/{hour}")
+    @GetMapping("/create/hour/{hour}/minutes/{minutes}")
     public void get1(@PathVariable String hour) {
         return newJob()
                 .ofType(SampleJob.class)

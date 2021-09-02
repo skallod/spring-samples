@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: spring-config-client
+#  autoconfigure:
+#    exclude:
+#      - org.springframework.cloud.bus.BusPropertiesAutoConfiguration
+#      - org.springframework.cloud.client.ReactiveCommonsClientAutoConfiguration
+#      - org.springframework.cloud.client.discovery.simple.SimpleDiscoveryClientAutoConfiguration
+#      - org.springframework.cloud.stream.binder.kafka.config.ExtendedBindingHandlerMappingsProviderConfiguration
+#      - org.springframework.cloud.client.CommonsClientAutoConfiguration
+#      - org.springframework.cloud.commons.httpclient.HttpClientConfiguration
+#      - org.springframework.cloud.config.client.ConfigClientAutoConfiguration
+#      - org.springframework.cloud.client.discovery.composite.CompositeDiscoveryClientAutoConfiguration
+#      - org.springframework.cloud.client.serviceregistry.ServiceRegistryAutoConfiguration
+#      - org.springframework.cloud.autoconfigure.LifecycleMvcEndpointAutoConfiguration
+  cloud:
+#    config:
+#      uri: ${CONFIG_URI:http://localhost:8762}
+#      enabled: false не работает
+#      uri: http://localhost:8888
+#      fail-fast: true не работает
+#      retry:
+#        max-attempts: 20
+#        max-interval: 15000
+#        initial-interval: 10000
+    bus:
+      enabled: false # работает
+      id: ${spring.application.name}:default:${random.uuid}
+      refresh:
+        enabled: true
+      env:
+        enabled: true
+#  kafka:
+#    bootstrap-servers: localhost:9091
+#my:
+#  greeting: hello w
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+logging:
+  level:
+    org:
+      springframework: DEBUG
