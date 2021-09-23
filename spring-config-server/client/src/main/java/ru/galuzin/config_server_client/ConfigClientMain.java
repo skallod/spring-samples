@@ -7,5 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ConfigClientMain {
     public static void main(String[] args) {
         SpringApplication.run(ConfigClientMain.class);
+        System.out.println("System.getenv() = " + System.getenv());
+        System.out.println("System.getprop() = " + System.getProperties());
     }
 }

@@ -19,9 +19,17 @@ public class Controller {
     @Value("${my.filtering:false}")
     boolean filtering;
 
+    @Value("${spring.profiles.active}")
+    String profiles;
+
+//    не работает @Value("${instance.name}")
+//    String instName;
+
     @GetMapping("/greeting")
     public String greeting() {
-        logger.trace("greeting trace {}", filtering);
+        logger.trace("greeting TRACE {}", filtering);
+        logger.debug("greeting DEBUG {}", filtering);
+        logger.info("greeting INFO {}", filtering);
         return myGreeting;
     }
 }

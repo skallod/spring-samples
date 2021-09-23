@@ -3,6 +3,20 @@ spring:
     config:
       server:
         git:
-          uri: file://${user.home}/projects/localgit
+          uri: file:///${user.home}/projects/localgit
+    bus.id: my-config-server
+    stream.kafka.binder.zkNodes: localhost:2181
+    stream.kafka.binder.brokers: localhost:9092
+    bus:
+      enabled: true
 server:
-  port: 8888
+  port: 8887
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+logging:
+  level:
+    org:
+      springframework: INFO

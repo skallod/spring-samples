@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: tsaj-log-level-demo-2
+  cloud:
+    config:
+      fail-fast: false
+      # работает
+      enabled: false
+      override-system-properties: false
+    bus:
+      # работает
+      enabled: true
+      id: ${spring.application.name}:${spring.profiles.active}:${random.uuid}
+#      destination: springCloudBus
+      destination: config_topic
+      refresh:
+        enabled: true
+      env:
+        enabled: true
+      trace:
+        enabled: true
+logging:
+  level:
+    org:
+      springframework: TRACE
+server:
+  port: 8080
