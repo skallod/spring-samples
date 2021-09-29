@@ -31,12 +31,12 @@ public class HiberConf {
     @Bean
     public DataSource dataSource() {
         HikariDataSource dataSource = new HikariDataSource();
-//        dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
-        dataSource.setJdbcUrl("jdbc:oracle:thin:@localhost:1521:orcl");
-//        dataSource.setUsername("sa");
-        dataSource.setUsername("johny");
-//        dataSource.setPassword("sa");
+        dataSource.setDriverClassName("org.h2.Driver");
+//        dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+//        dataSource.setJdbcUrl("jdbc:oracle:thin:@localhost:1521:orcl");
+        dataSource.setUsername("sa");
+//        dataSource.setUsername("johny");
+        dataSource.setPassword("sa");//password
         dataSource.setPassword("1234");
         dataSource.setAutoCommit(false);
         dataSource.setMaximumPoolSize(30);
