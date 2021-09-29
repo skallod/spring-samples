@@ -11,8 +11,8 @@ spring:
       # работает
       enabled: true
       id: ${spring.application.name}:${spring.profiles.active}:${random.uuid}
-#      destination: springCloudBus
-      destination: config_topic
+      destination: springCloudBus
+#      destination: config_topic
       refresh:
         enabled: true
       env:
@@ -22,6 +22,6 @@ spring:
 logging:
   level:
     org:
-      springframework: TRACE
+      springframework: INFO
 server:
   port: 8080
