@@ -1,0 +1,6 @@
+GET http://localhost:8080/greeting
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+###

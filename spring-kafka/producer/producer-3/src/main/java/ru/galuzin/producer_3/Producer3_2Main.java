@@ -3,6 +3,10 @@ package ru.galuzin.producer_3;
 import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import ru.galuzin.dto.CompressInfo;
 import ru.galuzin.dto.CompressType;
@@ -16,10 +20,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-
+@SpringBootApplication
 public class Producer3_2Main {
 
+    static final Logger log = LoggerFactory.getLogger(Producer3_2Main.class);
     public static void main(String[] args) throws Exception {
+        SpringApplication.run(Producer3_2Main.class);
         sendLoot();
     }
 
@@ -30,9 +36,11 @@ public class Producer3_2Main {
         Loot lootInn = new Loot("bullet " + UUID.randomUUID().toString());
         final JsonConverter jsonConverter = new JsonConverter();
         final byte[] bytes = jsonConverter.toJson(lootInn);
-        final byte[] compress = Helper.gzipCompress(bytes);
+        final long time = System.currentTimeMillis();
+        final byte[] compress = Helper.snappyCompress(bytes);
+        log.info("compress timing {}", System.currentTimeMillis() - time);
         lootW.setData(compress);
-        lootW.setCompressType(CompressType.GZIP);
+        lootW.setCompressType(CompressType.SNAPPY);
         final CompressInfo compressInfo = new CompressInfo();
         compressInfo.setData("hey".getBytes(StandardCharsets.UTF_8));
         final ProducerRecord<String, byte[]> producerRecord = new ProducerRecord<String, byte[]>("test_loot",

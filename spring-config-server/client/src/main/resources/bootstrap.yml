@@ -1,12 +1,15 @@
 spring:
   application:
     name: tsaj-log-level-demo-2
+  profiles:
+    active: dev
   cloud:
     config:
       fail-fast: false
       # работает
-      enabled: false
+      enabled: true
       override-system-properties: false
+      uri: http://localhost:8887
     bus:
       # работает
       enabled: true

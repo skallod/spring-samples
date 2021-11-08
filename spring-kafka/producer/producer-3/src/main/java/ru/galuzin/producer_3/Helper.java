@@ -53,4 +53,22 @@ public class Helper {
             throw new IllegalStateException();
         }
     }
+    public static byte[] snappyUnCompress(byte[] data) {
+        try {
+            return Snappy.uncompress(data);
+        } catch (IOException e) {
+            log.error("compress fail", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static byte[] snappyCompress(byte[] data) {
+        try {
+            data = Snappy.compress(data);
+        } catch (IOException e) {
+            log.error("uncompress fail", e);
+            throw new RuntimeException(e);
+        }
+        return data;
+    }
 }

@@ -30,6 +30,7 @@ public class Controller {
         logger.trace("greeting TRACE {}", filtering);
         logger.debug("greeting DEBUG {}", filtering);
         logger.info("greeting INFO {}", filtering);
+        logger.warn("greeting WARN {}", filtering);
         return myGreeting;
     }
 }
