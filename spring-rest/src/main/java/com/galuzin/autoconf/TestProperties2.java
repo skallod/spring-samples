@@ -6,9 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "test-settings.services")
-public class TestProperties1 {
-    String str1;
-    String str2;
-    TestProperties2 props;
+@ConfigurationProperties(prefix = "test-settings.services.props")
+public class TestProperties2 {
+    String prop1;
 }

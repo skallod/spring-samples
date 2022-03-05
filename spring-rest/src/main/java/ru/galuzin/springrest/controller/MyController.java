@@ -15,6 +15,7 @@ import ru.galuzin.springrest.dto.ApiErrorMessage;
 import ru.galuzin.springrest.dto.TestDto;
 import ru.galuzin.springrest.exception.NotFoundException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
@@ -38,12 +39,9 @@ public class MyController {
     public ResponseEntity<String> testpost(){
         final HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type","application/json");
-//        if (!headers.isEmpty()) {
-//            throw new Fi
+//        if (true) {
+//            throw new NullPointerException();
 //        }
-        if (true) {
-            throw new NullPointerException();
-        }
         final ArrayList<Object> list = new ArrayList<>();
         return new ResponseEntity<>("good",headers, HttpStatus.ACCEPTED);
     }

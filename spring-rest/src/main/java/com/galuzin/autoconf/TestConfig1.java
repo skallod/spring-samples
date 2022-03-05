@@ -8,9 +8,12 @@ import org.springframework.context.annotation.Configuration;
 
 @RequiredArgsConstructor
 @Configuration
-@ConditionalOnProperty(value = "test-settings.services.autoconfiguration",
-        matchIfMissing = true) // true - бины создаются без настройки , false - не создаются
-@EnableConfigurationProperties(TestProperties1.class)
+@ConditionalOnProperty(prefix = "test-settings.services.props",
+    name = "prop1",
+//    prefix = "test-settings.services",
+//        name = "autoconfiguration",
+        matchIfMissing = false) // true - бины создаются без настройки , false - не создаются
+@EnableConfigurationProperties({TestProperties1.class})
 public class TestConfig1 {
 
     @Bean

@@ -11,3 +11,13 @@ management:
   endpoint:
     health.enabled: true
     prometheus.enabled: true
+testSettings:
+  services:
+    autoconfiguration: false
+    str1: str1value
+    props:
+      prop1: prop1value
+logging:
+  level:
+    org:
+      springframework: DEBUG
