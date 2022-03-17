@@ -3,7 +3,10 @@ package ru.pesok.graviy.spring.orm;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.event.EventListener;
 import ru.pesok.graviy.spring.orm.config.HiberConf;
@@ -17,7 +20,7 @@ import java.util.List;
 import java.util.concurrent.*;
 
 //@SuppressWarnings("SpringJavaAutowiredFieldsWarningInspection")
-//@SpringBootApplication
+@SpringBootApplication
 public class Main {
 
     private static final Logger log = LoggerFactory.getLogger(Main.class);
@@ -26,7 +29,8 @@ public class Main {
 //    private PersonService service;
 
     public static void main(String[] args) throws Exception {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(HiberConf.class);
+        final ConfigurableApplicationContext context = SpringApplication.run(Main.class);
+//        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(HiberConf.class);
         new Main().entryPoint(context.getBean(PersonService.class));
     }
 
@@ -39,7 +43,7 @@ public class Main {
 //        List<Person> all = service.getAll();
     }
 
-    @EventListener(ApplicationReadyEvent.class)
+//    @EventListener(ApplicationReadyEvent.class)
     public void entryPoint(PersonService service) throws Exception {
         List<Person> all = service.getAll();
         log.info("gal all = " + all);

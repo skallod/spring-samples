@@ -13,11 +13,11 @@ import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
-@Service
+//@Service
 public class PersonRepository {
 
     @PersistenceContext
-    private EntityManager em;
+    private EntityManager em;// no qualifying bean
 
     @Autowired
     private PlatformTransactionManager tm;
