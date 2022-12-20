@@ -13,19 +13,30 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class MyControllerRestTemplateTest {
     @Autowired
     TestRestTemplate restTemplate;
+
     @Test
     public void test1() {
         System.out.println("restTemplate = " + restTemplate);
-        ResponseEntity<String> response = restTemplate.exchange(
-                "/api/v1/testpost",
-                HttpMethod.POST,
+        int i = 0;
+        while (true) {
+            String owner = i % 2 == 0 ? "selfcheck" : "dbo";
+            i++;
+            ResponseEntity<String> response = restTemplate.exchange(
+                "/getTasks?name="+owner,
+                HttpMethod.GET,
                 new HttpEntity<>(null),
                 String.class);
-        //then
-        Assert.assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+            //then
+            Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

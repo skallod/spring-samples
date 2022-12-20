@@ -4,6 +4,7 @@ spring:
 
 setting1: value1
 
+
 management:
   endpoints:
     enabled-by-default: false
@@ -11,6 +12,13 @@ management:
   endpoint:
     health.enabled: true
     prometheus.enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
 testSettings:
   services:
     autoconfiguration: false
@@ -20,4 +28,6 @@ testSettings:
 logging:
   level:
     org:
-      springframework: DEBUG
+      springframework: INFO
+server:
+  port: 8081
