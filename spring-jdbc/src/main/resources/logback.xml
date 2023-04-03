@@ -7,15 +7,15 @@
         </encoder>
     </appender>
 
-    <logger name="org.postgresql" level="TRACE">
+    <logger name="org.postgresql" level="INFO">
         <appender-ref ref="STDOUT"/>
     </logger>
 
-    <logger name="org.postgresql.Driver" level="TRACE">
+    <logger name="org.postgresql.Driver" level="INFO">
         <appender-ref ref="STDOUT"/>
     </logger>
 
-    <root level="TRACE">
+    <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>
 

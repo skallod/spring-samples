@@ -23,6 +23,11 @@ public class JdbcMain {
     public static final String SSL_KEY = "c:/users/[user]/Documents/tasks/postgres/client.key.pk8";
 
     public static void main(String[] args) throws SQLException {
+//        someQueries();
+
+    }
+
+    private static void someQueries() throws SQLException {
         log.info("jjj start");
         logback.debug("lll start");
 
