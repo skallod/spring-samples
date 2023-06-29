@@ -1,7 +1,6 @@
 package ru.pesok.graviy.spring.orm.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pesok.graviy.spring.orm.domain.Person;
@@ -13,7 +12,7 @@ import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
-@Service
+@org.springframework.stereotype.Repository
 public class PersonRepository implements PersonRepositoryIF {
 
     @PersistenceContext
