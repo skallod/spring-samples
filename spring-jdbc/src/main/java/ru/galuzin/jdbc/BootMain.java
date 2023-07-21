@@ -137,7 +137,6 @@ public class BootMain {
             .isNew(true)
             .availabilityZoneId(zoneId)
             .address("Naberezhnaya-1")
-            .coordinates("23,4234221;45,4234221")
             .baseEntity(dCenterBE)
             .build();
     }
