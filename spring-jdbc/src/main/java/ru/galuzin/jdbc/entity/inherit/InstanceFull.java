@@ -18,9 +18,10 @@ import java.util.UUID;
 public class InstanceFull extends InstancePlain {
 
     @Singular
-    @MappedCollection(idColumn = "id")
+    @MappedCollection(idColumn = "instance_id")
     private final Set<Item> items;
 
+//    @Builder//(toBuilder = true)
     @PersistenceConstructor
     public InstanceFull(UUID id, @Singular Set<Item> items, @NonNull String name) {
         super(id, name);

@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @SuperBuilder(toBuilder = true)
 @Getter
-public class Item extends InstanceBase {
+public class Item extends IdHolder {
 
     protected final String name;
 

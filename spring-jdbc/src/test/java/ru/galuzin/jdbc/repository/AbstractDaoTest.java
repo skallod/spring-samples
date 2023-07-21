@@ -20,17 +20,18 @@ import javax.sql.DataSource;
 @SpringBootTest(classes = {
     AbstractDaoTest.SpringConfiguration.class
 })
-@Transactional
+//@Transactional
 @EnableAutoConfiguration
-@EnableTransactionManagement
+//@EnableTransactionManagement
 public abstract class AbstractDaoTest {
 
     @Configuration
     @Import(JdbcCustomConverter.class)
     @ComponentScan(
-        basePackageClasses = {RegionRepository.class}
+        basePackageClasses = {InstancePlainRepository.class}
 
     )
+
     public static class SpringConfiguration {
 
         @Bean

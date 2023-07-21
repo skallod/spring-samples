@@ -8,8 +8,8 @@ import ru.galuzin.jdbc.entity.inherit.InstancePlain;
 import ru.galuzin.jdbc.entity.inherit.Item;
 
 import java.util.Optional;
+import java.util.UUID;
 
-//@Transactional
 public class InstanceRepositoryTest extends AbstractDaoTest {
 
     @Autowired
@@ -39,8 +39,26 @@ public class InstanceRepositoryTest extends AbstractDaoTest {
         instanceFullRepository.save(loadFull.get());
         final Optional<InstanceFull> loadFull2 = instanceFullRepository.findById(save1.getId());
         System.out.println("loadFull2 = " + loadFull2);
-//        InstanceFull.builder()
-//            .item(item1)
-//            .build();
+//        instancePlainRepository.delete(save1);//не может удалить, т.к. item все еще ссылается на него
+        System.out.println("finish");
+    }
+
+    @Test
+    public void test2() {
+        final UUID uuid = UUID.randomUUID();
+        final InstanceFull instanceFull = InstanceFull.builder()
+            .item(
+                Item.builder()
+                    .name("item1")
+//                    .instanceId(uuid)
+                    .build()
+            )
+            .name("instance-2")
+//            .id(uuid)
+//            .isNew(true)
+            .build();
+        final InstanceFull save = instanceFullRepository.save(instanceFull);
+        final Optional<InstanceFull> byId = instanceFullRepository.findById(save.getId());
+        System.out.println("byId = " + byId);
     }
 }

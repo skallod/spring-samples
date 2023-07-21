@@ -16,7 +16,7 @@ import java.util.UUID;
 @SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 @Getter
-public class InstanceBase implements Persistable<UUID> {
+public class IdHolder implements Persistable<UUID> {
     @Id
     protected final UUID id;
 
@@ -24,7 +24,7 @@ public class InstanceBase implements Persistable<UUID> {
     protected boolean isNew;
 
     @PersistenceConstructor
-    public InstanceBase(UUID id) {
+    public IdHolder(UUID id) {
         this.id = id;
     }
     
