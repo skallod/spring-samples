@@ -1,10 +1,11 @@
 spring:
   datasource:
-#    url: jdbc:postgresql://localhost:5432/postgres
-#    username: postgres
-#    password: mysecretpassword
-#    driverClassName: org.postgresql.Driver
-    url: jdbc:oracle:thin:@localhost:1521:XE
-    username: johny
-    password: 1234
-    driverClassName: oracle.jdbc.driver.OracleDriver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+#    password: 1
+    password: mysecretpassword
+    driverClassName: org.postgresql.Driver
+#    url: jdbc:oracle:thin:@localhost:1521:XE
+#    username: johny
+#    password: 1234
+#    driverClassName: oracle.jdbc.driver.OracleDriver
