@@ -1,7 +1,21 @@
-http://localhost:8080/actuator
+http://localhost:8081/actuator
+
+###
+http://localhost:8081/actuator/health
+
+###
+http://localhost:8081/actuator/health/liveness
+
+###
+http://localhost:8081/actuator/health/readiness
+
+###
+http://localhost:8081/actuator/health
 
 ###
 http://localhost:8080/actuator/prometheus
 
 ###
 first_counter_total{method="get",} 0.0
+
+###

@@ -6,11 +6,30 @@ setting1: value1
 
 
 management:
+  health:
+    livenessState.enabled: true
+    readinessState.enabled: true
+    probes:
+      enabled: true
+#    db:
+#      enabled: false
   endpoints:
     enabled-by-default: false
     web.exposure.include: health,prometheus
   endpoint:
-    health.enabled: true
+    health:
+      enabled: true
+      show-details: always
+      probes.enabled: true
+      group:
+        readiness:
+          include:
+            - readinessState
+            - customDbHealthIndicator
+        liveness:
+          include:
+            - livenessState
+            - customDbHealthIndicator
     prometheus.enabled: true
   metrics:
     export:
@@ -31,3 +50,12 @@ logging:
       springframework: INFO
 server:
   port: 8081
+#app:
+#  mainDataSource:
+#    url: jdbc:postgresql://localhost:5432/main?currentSchema=schema1
+#    username: postgres
+#    password: mysecretpassword
+#  secondaryDataSource:
+#    url: jdbc:postgresql://localhost:5432/main?currentSchema=schema1
+#    username: postgres
+#    password: mysecretpassword

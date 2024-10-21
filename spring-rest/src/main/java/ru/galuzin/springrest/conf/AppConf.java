@@ -1,16 +1,43 @@
 package ru.galuzin.springrest.conf;
 
 import io.micrometer.core.instrument.MeterRegistry;
+import org.postgresql.ds.PGSimpleDataSource;
+import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import ru.galuzin.springrest.health.CustomDbHealthIndicator;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
+import javax.sql.DataSource;
 
 @Configuration
 public class AppConf {
+
+    @Bean
+    public DataSource mainDataSource() {
+        final PGSimpleDataSource dataSource = new PGSimpleDataSource();
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/main");
+        dataSource.setUser("postgres");
+        dataSource.setPassword("mysecretpassword");
+        return dataSource;
+    }
+
+    @Bean
+    public DataSource secondaryDataSource() {
+        final var dataSource = new PGSimpleDataSource();
+        dataSource.setUrl("jdbc:postgresql://localhost:35432/postgres");
+        dataSource.setUser("postgres");
+        dataSource.setPassword("mysecretpassword");
+        return dataSource;
+    }
+
+    @Bean
+    public HealthIndicator customDbHealthIndicator (
+        DataSource mainDataSource,
+        DataSource secondaryDataSource
+    ) {
+        return new CustomDbHealthIndicator(mainDataSource, secondaryDataSource);
+    }
 
     @Bean(name = "appTaskExecutor")
     public ThreadPoolTaskExecutor appTaskExecutor(MeterRegistry meterRegistry) {
@@ -28,5 +55,7 @@ public class AppConf {
 //        executor.initialize();
         return executor;
     }
+
+
 
 }

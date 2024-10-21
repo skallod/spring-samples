@@ -38,14 +38,6 @@ public class MyControllerTest implements ApplicationContextAware {
         mvc.perform(post("/api/v1/testpost")).andExpect(status().isAccepted());
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        String[] allBeanNames = applicationContext.getBeanDefinitionNames();
-        Arrays.sort(allBeanNames);
-        for(String beanName : allBeanNames) {
-            System.out.println(beanName);
-        }
-    }
 
     @Configuration
     @EnableAutoConfiguration
