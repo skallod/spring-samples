@@ -19,8 +19,8 @@ public class Region implements Persistable<UUID> {
     @Id
     private UUID id;
 
-    @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL)
-    private BaseEntity baseEntity;
+//    @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL)
+//    private BaseEntity baseEntity;
 
     @Singular
     @MappedCollection(idColumn = "region_id", keyColumn = "name")
@@ -30,9 +30,9 @@ public class Region implements Persistable<UUID> {
     private boolean isNew;
 
     @PersistenceConstructor
-    private Region(UUID id, BaseEntity baseEntity, List<AvailabilityZone> availabilityZones) {
+    private Region(UUID id, /*BaseEntity baseEntity,*/ List<AvailabilityZone> availabilityZones) {
         this.id = id;
-        this.baseEntity = baseEntity;
+//        this.baseEntity = baseEntity;
         this.availabilityZones = availabilityZones;
         this.isNew = false;
     }
@@ -40,7 +40,7 @@ public class Region implements Persistable<UUID> {
     @Builder
     public Region(UUID id, BaseEntity baseEntity, List<AvailabilityZone> availabilityZones, boolean isNew) {
         this.id = id;
-        this.baseEntity = baseEntity;
+//        this.baseEntity = baseEntity;
         this.availabilityZones = availabilityZones;
         this.isNew = isNew;
     }

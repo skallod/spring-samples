@@ -1,7 +1,6 @@
 package ru.galuzin.jdbc.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,19 +11,19 @@ import javax.sql.DataSource;
 @Configuration
 public class Config {
 
-    @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource());
-    }
+//    @Bean
+//    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+//        return new JdbcTemplate(dataSource);
+//    }
 
-    @Bean
-    public DataSource dataSource() {
-        final PGSimpleDataSource dataSource = new PGSimpleDataSource();
-        dataSource.setUrl("jdbc:postgresql://localhost:25432/demo");
-        dataSource.setUser("postgres");
-        dataSource.setPassword("mysecretpassword");
-        return dataSource;
-    }
+//    @Bean
+//    public DataSource dataSource() {
+//        final PGSimpleDataSource dataSource = new PGSimpleDataSource();
+//        dataSource.setUrl("jdbc:postgresql://localhost:25432/demo");
+//        dataSource.setUser("postgres");
+//        dataSource.setPassword("mysecretpassword");
+//        return dataSource;
+//    }
 
     /**
      * Заполняет общие поля для сущностей

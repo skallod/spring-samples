@@ -21,30 +21,30 @@ public class AvailabilityZone implements Persistable<UUID> {
     @Id
     UUID id;
 
-    @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL)
-    private BaseEntity baseEntity;
+//    @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL)
+//    private BaseEntity baseEntity;
 
     @Column("region_id")
     private UUID regionId;
 
-    @Singular
-    @MappedCollection(idColumn = "availability_zone_id", keyColumn = "name")
-    private List<DCenter> dCenters;
+//    @Singular
+//    @MappedCollection(idColumn = "availability_zone_id", keyColumn = "name")
+//    private List<DCenter> dCenters;
 
     @Transient
     private boolean isNew;
 
     @PersistenceConstructor
-    private AvailabilityZone(UUID id, BaseEntity baseEntity, UUID regionId, List<DCenter> dCenters) {
-        this(id, baseEntity, regionId, dCenters, false);
+    private AvailabilityZone(UUID id, /*BaseEntity baseEntity,*/ UUID regionId/*, List<DCenter> dCenters*/) {
+        this(id, null, regionId, null, false);
     }
 
     @Builder
     public AvailabilityZone(UUID id, BaseEntity baseEntity, UUID regionId, List<DCenter> dCenters, boolean isNew) {
         this.id = id;
-        this.baseEntity = baseEntity;
+//        this.baseEntity = baseEntity;
         this.regionId = regionId;
         this.isNew = isNew;
-        this.dCenters = dCenters;
+//        this.dCenters = dCenters;
     }
 }

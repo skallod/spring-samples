@@ -1,21 +1,16 @@
 package ru.galuzin.springrest.dto;
 
-import io.swagger.annotations.ApiModel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 //@ApiModel(parent = GenericErrorMessage.class)
 public class FieldErrorMessage extends GenericErrorMessage {
     private String fieldName;
     private String violatedValue;
 
-    @Builder
-    public FieldErrorMessage(String message, String fieldName, String violatedValue) {
-        super(message);
-        this.fieldName = fieldName;
-        this.violatedValue = violatedValue;
-    }
 }

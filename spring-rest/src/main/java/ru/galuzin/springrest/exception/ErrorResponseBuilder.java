@@ -15,7 +15,9 @@ public class ErrorResponseBuilder {
         return ErrorResponse.builder()
                 .exceptionName(ex.getClass().getName())
                 .type(ErrorResponse.Type.INTERNAL)
-                .error(new ErrorMessage(ex.getLocalizedMessage()))
+                .error(ErrorMessage.builder()
+                        .message(ex.getLocalizedMessage())
+                        .build())
                 .build();
     }
 
@@ -29,7 +31,7 @@ public class ErrorResponseBuilder {
                                 message("message1").
                                 uri("uri-localhost").
                                 statusText("status-text").
-                                statusCode(HttpStatus.OK).
+                                statusCode(HttpStatus.OK.value()).
                                 errorBodyText("errorBody").
                                 errorBodyObject(mapper.readTree(new byte[0])).build()
                 ).build();

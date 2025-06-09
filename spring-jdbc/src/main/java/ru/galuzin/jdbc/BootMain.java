@@ -12,6 +12,8 @@ import ru.galuzin.jdbc.repository.RegionRepository;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -23,7 +25,10 @@ public class BootMain {
         final RegionRepository region2Repository = context.getBean(RegionRepository.class);
         final AvailabilityZoneRepository availabilityZoneRepository = context.getBean(AvailabilityZoneRepository.class);
         final DCenterRepository dCenterRepository = context.getBean(DCenterRepository.class);
-        region2(region2Repository, availabilityZoneRepository, dCenterRepository);
+//        region2(region2Repository, availabilityZoneRepository, dCenterRepository);
+        Iterable<Region> allRegionsWithZones = region2Repository.findAll();
+//        List<Region> allRegionsWithZones = region2Repository.take2WithZones();
+        System.out.println("allRegionsWithZones = " + allRegionsWithZones);
 //        final Region region3 = Region.builder()
 //            .id(UUID.randomUUID())
 //            .availabilityZone(UUID.randomUUID())
@@ -91,12 +96,12 @@ public class BootMain {
         region1.setAvailabilityZones(zones);
         log.info("Region obj {}", region1);
         final Region regionSaved1 = regionRepository.save(region1);
-        log.warn("regionSaved1 id {}, {}, {}", regionSaved1.getId(), regionSaved1.getBaseEntity().getCreated(), regionSaved1.getBaseEntity().getEdited());
+//        log.warn("regionSaved1 id {}, {}, {}", regionSaved1.getId(), regionSaved1.getBaseEntity().getCreated(), regionSaved1.getBaseEntity().getEdited());
         Region regionFound1 = regionRepository.findById(regionSaved1.getId()).get();
         log.warn("Region {}", regionFound1);
         AvailabilityZone zoneFound = availabilityZoneRepository.findById(regionFound1.getAvailabilityZones().iterator().next().getId()).get();
         log.warn("Zone found {}", zoneFound);
-        zoneFound.getBaseEntity().setDescription("zone found");
+//        zoneFound.getBaseEntity().setDescription("zone found");
         availabilityZoneRepository.save(zoneFound);
 
         final AvailabilityZone z2 = getZone("zone 2");

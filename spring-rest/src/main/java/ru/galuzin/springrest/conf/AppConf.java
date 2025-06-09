@@ -1,16 +1,25 @@
 package ru.galuzin.springrest.conf;
 
+import com.galuzin.autoconf.TestProperties1;
+import com.galuzin.autoconf.TestProperties3;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.postgresql.ds.PGSimpleDataSource;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import ru.galuzin.springrest.health.CustomDbHealthIndicator;
+import ru.galuzin.springrest.service.MyCachedService;
 
 import javax.sql.DataSource;
 
 @Configuration
+@EnableConfigurationProperties({TestProperties1.class, TestProperties3.class})
 public class AppConf {
 
     @Bean
@@ -31,7 +40,7 @@ public class AppConf {
         return dataSource;
     }
 
-    @Bean
+    @Bean(name = "customDbHealthIndicator")
     public HealthIndicator customDbHealthIndicator (
         DataSource mainDataSource,
         DataSource secondaryDataSource
@@ -56,6 +65,13 @@ public class AppConf {
         return executor;
     }
 
-
+    @Primary
+    @Bean
+    @ConditionalOnProperty(name = "test-settings.services.listener.cache-enabled", havingValue = "true")
+    public MyCachedService myCachedService(
+            @Qualifier("configurationCacheManager") CacheManager cacheManager
+    ) {
+        return new MyCachedService(cacheManager.getCache("tags"));
+    }
 
 }

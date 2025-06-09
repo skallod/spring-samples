@@ -15,7 +15,7 @@ import ru.galuzin.springrest.dto.ApiErrorMessage;
 import ru.galuzin.springrest.dto.TestDto;
 import ru.galuzin.springrest.exception.NotFoundException;
 
-import javax.servlet.http.HttpServletRequest;
+//import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;

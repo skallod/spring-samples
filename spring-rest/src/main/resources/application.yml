@@ -15,7 +15,7 @@ management:
 #      enabled: false
   endpoints:
     enabled-by-default: false
-    web.exposure.include: health,prometheus
+    web.exposure.include: health,prometheus,env,configprops
   endpoint:
     health:
       enabled: true
@@ -25,11 +25,11 @@ management:
         readiness:
           include:
             - readinessState
-            - customDbHealthIndicator
+#            - customDbHealthIndicator
         liveness:
           include:
             - livenessState
-            - customDbHealthIndicator
+#            - customDbHealthIndicator
     prometheus.enabled: true
   metrics:
     export:
@@ -44,6 +44,12 @@ testSettings:
     str1: str1value
     props:
       prop1: prop1value
+test-settings:
+  restartAfterAuthException: null
+  authIntervalRetry: null
+  services:
+    listener:
+      cache-enabled: true
 logging:
   level:
     org:

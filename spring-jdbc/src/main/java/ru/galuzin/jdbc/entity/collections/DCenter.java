@@ -32,7 +32,7 @@ public class DCenter  implements Persistable<UUID> {
     private boolean isNew;
 
     @PersistenceConstructor
-    private DCenter(UUID id, BaseEntity baseEntity, UUID availabilityZoneId, String address, String coordinates) {
+    private DCenter(UUID id, BaseEntity baseEntity, UUID availabilityZoneId, String address) {
         this(id, baseEntity, availabilityZoneId, address, false);
     }
 
