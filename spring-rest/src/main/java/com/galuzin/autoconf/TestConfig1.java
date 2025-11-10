@@ -10,9 +10,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConditionalOnProperty(prefix = "test-settings.services.props",
     name = "prop1",
+    havingValue = "prop1value",
 //    prefix = "test-settings.services",
 //        name = "autoconfiguration",
-        matchIfMissing = false) // true - бины создаются без настройки , false - не создаются
+    matchIfMissing = false) // true - бины создаются без настройки , false - не создаются
 @EnableConfigurationProperties({TestProperties1.class})
 public class TestConfig1 {
 

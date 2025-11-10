@@ -4,6 +4,8 @@ spring:
 
 setting1: value1
 
+api.path: /api/v1
+api.pattern: \+7\d{10}
 
 management:
   health:
@@ -14,8 +16,9 @@ management:
 #    db:
 #      enabled: false
   endpoints:
-    enabled-by-default: false
-    web.exposure.include: health,prometheus,env,configprops
+    enabled-by-default: true
+# не работает    web.exposure.include: *
+    web.exposure.include: health,info,prometheus,env,configprops,scheduledtasks
   endpoint:
     health:
       enabled: true
@@ -50,12 +53,18 @@ test-settings:
   services:
     listener:
       cache-enabled: true
+      props:
+        prop1: prop1value
+my:
+  scheduled:
+    cron:
+      expression-value: "0 */1 * * * *"
 logging:
   level:
     org:
       springframework: INFO
 server:
-  port: 8081
+  port: 8080
 #app:
 #  mainDataSource:
 #    url: jdbc:postgresql://localhost:5432/main?currentSchema=schema1

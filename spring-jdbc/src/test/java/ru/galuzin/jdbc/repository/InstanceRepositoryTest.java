@@ -1,5 +1,6 @@
 package ru.galuzin.jdbc.repository;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,5 +61,12 @@ public class InstanceRepositoryTest extends AbstractDaoTest {
         final InstanceFull save = instanceFullRepository.save(instanceFull);
         final Optional<InstanceFull> byId = instanceFullRepository.findById(save.getId());
         System.out.println("byId = " + byId);
+    }
+
+    @Test
+    public void test3() {
+        boolean notEmpty = instanceFullRepository.isNotEmpty();
+        System.out.println("notEmpty = " + notEmpty);
+        Assert.assertTrue(notEmpty);
     }
 }

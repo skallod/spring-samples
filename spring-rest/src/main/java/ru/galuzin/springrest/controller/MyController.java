@@ -3,6 +3,7 @@ package ru.galuzin.springrest.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,29 +12,36 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.galuzin.springrest.dto.ApiErrorMessage;
 import ru.galuzin.springrest.dto.TestDto;
-import ru.galuzin.springrest.exception.NotFoundException;
 
-//import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ForkJoinPool;
+import java.util.regex.Pattern;
 
+@Slf4j
 @Controller
-@RequestMapping("/api/v1")
+@RequestMapping("${api.path}")
 public class MyController {
 
     private final String setting1;
 
     private final ObjectMapper mapper;
 
-    public MyController(@Value("${setting1}")String setting1) {
+    private final Pattern pattern;
+
+    public MyController(@Value("${setting1}")String setting1,
+                        @Value("${api.pattern}") String patternStr) {
         this.setting1 = setting1;
         this.mapper = new ObjectMapper();
+        pattern = Pattern.compile(patternStr);
     }
+
+    /*@PostConstruct
+    public void init() {
+        pattern = Pattern.compile(patternStr);
+        if (pattern.matcher("+79995556644").find()) {
+            log.info("!!!! Matches !!!!");
+        }
+    }*/
 
     @PostMapping("/testpost")
     public ResponseEntity<String> testpost(){
@@ -49,6 +57,7 @@ public class MyController {
     @GetMapping("/getdto")
     @SneakyThrows
     public ResponseEntity<TestDto> getdto() {
+        log.debug("getdto method called");
         final JsonNode jsonNode = mapper.readTree(new byte[0]);
         return new ResponseEntity<TestDto>(
                 new TestDto("test mes 1"),

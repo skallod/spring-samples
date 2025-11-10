@@ -42,9 +42,9 @@ public abstract class AbstractDaoTest {
         @Bean
         public DataSource dataSource() {
             final PGSimpleDataSource dataSource = new PGSimpleDataSource();
-            dataSource.setUrl("jdbc:postgresql://localhost:25432/demo?currentSchema=temp1");
-            dataSource.setUser("airuser");
-            dataSource.setPassword("airpass");
+            dataSource.setUrl("jdbc:postgresql://localhost:5432/test?currentSchema=springjdbc");
+            dataSource.setUser("postgres");
+            dataSource.setPassword("mysecretpassword");
             return dataSource;
         }
     }

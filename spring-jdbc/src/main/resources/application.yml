@@ -1,10 +1,10 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/jdbctest
+    url: jdbc:postgresql://localhost:5432/test?currentSchema=springjdbc
     username: postgres
     password: mysecretpassword
   flyway:
-    url: jdbc:postgresql://localhost:5432/jdbctest
+    url: jdbc:postgresql://localhost:5432/test?currentSchema=springjdbc
     enabled: true
     user: postgres
     password: mysecretpassword
