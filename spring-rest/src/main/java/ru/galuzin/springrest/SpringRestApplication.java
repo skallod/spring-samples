@@ -20,7 +20,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class SpringRestApplication {
 
     public static void main(String[] args) {
-//        Temp opposite = opposite(null);
         final ConfigurableApplicationContext context = SpringApplication.run(SpringRestApplication.class, args);
 //        Gauge
 //        .builder("first.counter")
@@ -56,5 +55,12 @@ public class SpringRestApplication {
     }
 
     static enum Temp {T1, T2, T3}
+
+    private static boolean test(Object obj) {
+        if (obj instanceof Boolean) { // null дает false
+            return true == ((Boolean)obj).booleanValue();
+        }
+        return false;
+    }
 
 }

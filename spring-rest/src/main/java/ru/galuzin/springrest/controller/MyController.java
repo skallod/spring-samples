@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,13 +13,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.galuzin.springrest.dto.TestDto;
+import ru.galuzin.springrest.dto.TestDtoExt;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("${api.path}")
 public class MyController {
 
@@ -56,12 +62,27 @@ public class MyController {
 
     @GetMapping("/getdto")
     @SneakyThrows
-    public ResponseEntity<TestDto> getdto() {
+    public ResponseEntity<List<TestDto>> getdto() {
         log.debug("getdto method called");
         final JsonNode jsonNode = mapper.readTree(new byte[0]);
-        return new ResponseEntity<TestDto>(
-                new TestDto("test mes 1"),
+        return new ResponseEntity<List<TestDto>>(
+                m1().stream()
+                .filter(Objects::nonNull)
+                .peek(it -> log.info("response dto {}", it.getClass().getName()))
+                .toList(),
                 HttpStatus.OK);
+    }
+
+    private List<TestDto> m1 () {
+        return (List<TestDto>) m2();
+    }
+
+    private List<? extends TestDto> m2 () {
+        TestDtoExt testDtoExt = new TestDtoExt();
+        testDtoExt.setIsVne(true);
+        testDtoExt.setMessage("mess1");
+        List<TestDtoExt> l = List.of(testDtoExt);
+        return l;
     }
 
 }
