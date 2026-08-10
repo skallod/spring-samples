@@ -12,7 +12,7 @@ import ru.pesok.graviy.spring.orm.service.ChangeService;
 import ru.pesok.graviy.spring.orm.service.PersonService;
 import ru.pesok.graviy.spring.orm.service.TaskService;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -25,6 +25,12 @@ public class Main {
         PersonService ps = context.getBean(PersonService.class);
         final Person byId = ps.findById(1000501);
         System.out.println("byId = " + byId);
+        Person built = Person.builder()
+            .id(3)
+            .zone("zone1")
+            .name("name1")
+            .build();
+        ps.save(built);
 //        ps.streamAll();
 //        ChangeService chR = context.getBean(ChangeService.class);
 //        chR.saveChange();

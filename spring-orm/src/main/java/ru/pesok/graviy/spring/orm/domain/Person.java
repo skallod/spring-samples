@@ -1,11 +1,18 @@
 package ru.pesok.graviy.spring.orm.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import java.time.Instant;
 
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Person {
 
     @Id
@@ -16,14 +23,14 @@ public class Person {
     @Column(name = "created_at")
     private Instant createdAt;
 
-    public Person() {
-    }
-
-    public Person(int id, String name, String zone) {
-        this.id = id;
-        this.name = name;
-        this.zone = zone;
-    }
+//    public Person() {
+//    }
+//
+//    public Person(int id, String name, String zone) {
+//        this.id = id;
+//        this.name = name;
+//        this.zone = zone;
+//    }
 
     public int getId() {
         return id;

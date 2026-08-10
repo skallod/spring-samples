@@ -1,28 +1,31 @@
 package ru.pesok.graviy.spring.orm.service;
 
 
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pesok.graviy.spring.orm.domain.Person;
-import ru.pesok.graviy.spring.orm.repository.PersonRepositoryData;
+import ru.pesok.graviy.spring.orm.repository.PersonRepository;
+import ru.pesok.graviy.spring.orm.repository.SpringDataPersonRepository;
 import ru.pesok.graviy.spring.orm.repository.PersonRepositoryIF;
 
-import javax.persistence.EntityManager;
+//import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @Service
 public class PersonService {
 
     private final PersonRepositoryIF repository;
 
-    private final PersonRepositoryData repositoryData;
+    private final SpringDataPersonRepository repositoryData;
 
     @Autowired
     private EntityManager entityManager;
 
-    public PersonService(PersonRepositoryIF repository, PersonRepositoryData repositoryData) {
+    public PersonService(PersonRepositoryIF repository, SpringDataPersonRepository repositoryData) {
         this.repository = repository;
         this.repositoryData = repositoryData;
     }
@@ -44,18 +47,19 @@ public class PersonService {
 
     @Transactional
     public void streamAll(){
-        try(Stream<Person> personStream = repositoryData.findAll()) {
-            personStream.forEach(p -> {
+//        try(Stream<Person> personStream = repositoryData.findAll()) {
+        StreamSupport.stream(repositoryData.findAll().spliterator(), false).forEach(p -> {
                 System.out.println("p = " + p);
                 p.setName(p.getName() + 1);
-                repositoryData.saveAndFlush(p);
+                repositoryData.save(p);
                 entityManager.detach(p);
             });
-        }
+//        }
     }
 
+    @Transactional
     public Person findById(Integer id) {
-        return repositoryData.findById(id);
+        return repositoryData.findById(id.longValue()).orElse(null);
     }
 
 }
